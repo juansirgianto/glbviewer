@@ -69,7 +69,7 @@ export default function GLBViewer({
 
     // Load HDR Environment
     const rgbeLoader = new RGBELoader()
-    rgbeLoader.load('/hdr/studio.hdr', (texture: THREE.DataTexture) => {
+    rgbeLoader.load('./hdr/studio.hdr', (texture: THREE.DataTexture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping
       scene.environment = texture
     })
@@ -167,11 +167,11 @@ function onPointerMove(event: MouseEvent) {
 renderer.domElement.addEventListener('pointermove', onPointerMove)
 
     const dracoLoader = new DRACOLoader()
-    dracoLoader.setDecoderPath('/draco/')
+    dracoLoader.setDecoderPath('./draco/')
     const loader = new GLTFLoader()
     loader.setDRACOLoader(dracoLoader)
 
-    loader.load('/ford.glb', (gltf: GLTF) => {
+    loader.load('./public/ford.glb', (gltf: GLTF) => {
   const carModel = gltf.scene.children[0] as THREE.Object3D
 
   // Buat dan simpan material
