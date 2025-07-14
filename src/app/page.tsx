@@ -152,7 +152,7 @@ useEffect(() => {
       </div>
 
       <div className='absolute w-[300px] top-1 left-1/2 -translate-x-1/2'>
-        <img src="./public/ford-logo.png" alt="" />
+        <img src="/ford-logo.png" alt="" />
       </div>
 
       <GLBViewer
