@@ -37,10 +37,10 @@ export default function GLBViewer({ bodyColor, detailsColor, glassColor }: GLBVi
 
     // Load HDR Environment
     const rgbeLoader = new RGBELoader()
-    // rgbeLoader.load('/hdr/studio.hdr', (texture: THREE.DataTexture) => {
-    //   texture.mapping = THREE.EquirectangularReflectionMapping
-    //   scene.environment = texture
-    // })
+    rgbeLoader.load('/hdr/studio.hdr', (texture: THREE.DataTexture) => {
+      texture.mapping = THREE.EquirectangularReflectionMapping
+      scene.environment = texture
+    })
 
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 350)
     camera.position.set(8, 1, 0)
@@ -51,17 +51,18 @@ export default function GLBViewer({ bodyColor, detailsColor, glassColor }: GLBVi
     mountRef.current?.appendChild(renderer.domElement)
 
     // environment intensity
+    renderer.toneMapping = THREE.NoToneMapping
     // renderer.toneMapping = THREE.ACESFilmicToneMapping
     // renderer.toneMappingExposure = 0.5
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.0)
-    ambientLight.position.set(5.4, 2.1, 7.5)
-    scene.add(ambientLight)
+    // const ambientLight = new THREE.AmbientLight(0xffffff, 1.0)
+    // ambientLight.position.set(5.4, 2.1, 7.5)
+    // scene.add(ambientLight)
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 15.0)
-    directionalLight.position.set(0, 5, 0)
-    directionalLight.castShadow = true
-    scene.add(directionalLight)
+    // const directionalLight = new THREE.DirectionalLight(0xffffff, 15.0)
+    // directionalLight.position.set(0, 5, 0)
+    // directionalLight.castShadow = true
+    // scene.add(directionalLight)
 
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.target.set(0, 1, 0)
