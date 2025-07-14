@@ -1,7 +1,7 @@
 // src/components/GLBViewer.tsx
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { JSX, useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 // @ts-ignore
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -16,9 +16,11 @@ interface GLBViewerProps {
   bodyColor: string
   detailsColor: string
   glassColor: string
+  onSelectMaterial?: (desc: JSX.Element) => void
+  meshDescriptions?: Record<string, JSX.Element>
 }
 
-export default function GLBViewer({ bodyColor, detailsColor, glassColor }: GLBViewerProps) {
+export default function GLBViewer({ bodyColor, detailsColor, glassColor, onSelectMaterial, meshDescriptions, }: GLBViewerProps) {
   const mountRef = useRef<HTMLDivElement>(null)
   const materialsRef = useRef<{
     body?: THREE.MeshPhysicalMaterial
@@ -26,6 +28,20 @@ export default function GLBViewer({ bodyColor, detailsColor, glassColor }: GLBVi
     glass?: THREE.MeshPhysicalMaterial
   }>({})
   const [cameraPos, setCameraPos] = useState({ x: 0, y: 0, z: 0 })
+
+  const highlightableMeshes = new Set([
+  'glass_headlight',
+  'carpaint_door_FL_doorLayer',
+  'carpaint_door_RL_doorLayer',
+  'carpaint_fenders_r',
+  'carpaint_trunk',
+  'carpaint_door_RR_doorLayer',
+  'carpaint_door_FR_doorLayer',
+  'carpaint_fenders_f',
+  'carpaint_hood',
+  'carpaint_windshield',
+  'glassDark_windshield',
+])
 
   useEffect(() => {
     const scene = new THREE.Scene()
@@ -68,6 +84,75 @@ export default function GLBViewer({ bodyColor, detailsColor, glassColor }: GLBVi
     controls.target.set(0, 1, 0)
     controls.update()
 
+    const raycaster = new THREE.Raycaster()
+    const pointer = new THREE.Vector2()
+
+    function onPointerDown(event: MouseEvent) {
+      const rect = renderer.domElement.getBoundingClientRect()
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+
+      raycaster.setFromCamera(pointer, camera)
+      const intersects = raycaster.intersectObjects(scene.children, true)
+
+      if (intersects.length > 0) {
+      const mesh = intersects[0].object as THREE.Mesh
+      const name = mesh.name || mesh.parent?.name
+
+      if (typeof name === 'string' && meshDescriptions?.[name]) {
+        onSelectMaterial?.(meshDescriptions[name])
+      } else {
+        onSelectMaterial?.(<p>Bagian lain</p>)
+      }
+    }
+    }
+
+    renderer.domElement.addEventListener('pointerdown', onPointerDown)
+
+let hoveredMesh: THREE.Mesh | null = null
+let originalColor: THREE.Color | null = null
+
+function onPointerMove(event: MouseEvent) {
+  const rect = renderer.domElement.getBoundingClientRect()
+  pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+  pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+
+  raycaster.setFromCamera(pointer, camera)
+  const intersects = raycaster.intersectObjects(scene.children, true)
+
+  if (intersects.length > 0) {
+    const mesh = intersects[0].object as THREE.Mesh
+    const name = mesh.name || mesh.parent?.name
+
+    if (name && highlightableMeshes.has(name)) {
+      renderer.domElement.style.cursor = 'pointer'
+
+      if (hoveredMesh !== mesh) {
+        if (hoveredMesh && originalColor) {
+          (hoveredMesh.material as THREE.MeshStandardMaterial).color.copy(originalColor)
+        }
+
+        hoveredMesh = mesh
+        originalColor = (mesh.material as THREE.MeshStandardMaterial).color.clone()
+        const highlightedColor = originalColor.clone().multiplyScalar(0.3)
+        ;(mesh.material as THREE.MeshStandardMaterial).color.copy(highlightedColor)
+      }
+
+      return
+    }
+  }
+
+  renderer.domElement.style.cursor = 'default'
+
+  if (hoveredMesh && originalColor) {
+    ;(hoveredMesh.material as THREE.MeshStandardMaterial).color.copy(originalColor)
+    hoveredMesh = null
+    originalColor = null
+  }
+}
+
+renderer.domElement.addEventListener('pointermove', onPointerMove)
+
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/draco/')
     const loader = new GLTFLoader()
@@ -88,23 +173,23 @@ export default function GLBViewer({ bodyColor, detailsColor, glassColor }: GLBVi
         (body as THREE.Mesh).material = bodyMaterial
         }
       const seat = carModel.getObjectByName('carpaint_door_FL_doorLayer') as THREE.Mesh
-        if (seat) seat.material = detailsMaterial
+        if (seat) seat.material = detailsMaterial.clone()
       const rimFL = carModel.getObjectByName('carpaint_door_RL_doorLayer') as THREE.Mesh
-        if (rimFL) rimFL.material = detailsMaterial
+        if (rimFL) rimFL.material = detailsMaterial.clone()
       const rimFR = carModel.getObjectByName('carpaint_fenders_r') as THREE.Mesh
-        if (rimFR) rimFR.material = detailsMaterial
+        if (rimFR) rimFR.material = detailsMaterial.clone()
       const rimRR = carModel.getObjectByName('carpaint_trunk') as THREE.Mesh
-        if (rimRR) rimRR.material = detailsMaterial
+        if (rimRR) rimRR.material = detailsMaterial.clone()
       const rimRL = carModel.getObjectByName('carpaint_door_RR_doorLayer') as THREE.Mesh
-        if (rimRL) rimRL.material = detailsMaterial
+        if (rimRL) rimRL.material = detailsMaterial.clone()
       const Trim = carModel.getObjectByName('carpaint_door_FR_doorLayer') as THREE.Mesh
-        if (Trim) Trim.material = detailsMaterial
+        if (Trim) Trim.material = detailsMaterial.clone()
       const Trim1 = carModel.getObjectByName('carpaint_fenders_f') as THREE.Mesh
-        if (Trim1) Trim1.material = detailsMaterial
+        if (Trim1) Trim1.material = detailsMaterial.clone()
       const hood = carModel.getObjectByName('carpaint_hood') as THREE.Mesh
-        if (hood) hood.material = detailsMaterial
+        if (hood) hood.material = detailsMaterial.clone()
       const wind = carModel.getObjectByName('carpaint_windshield') as THREE.Mesh
-        if (wind) wind.material = detailsMaterial
+        if (wind) wind.material = detailsMaterial.clone()
       const Glass = carModel.getObjectByName('glassDark_windshield') as THREE.Mesh
         if (Glass) Glass.material = glassMaterial
 
@@ -125,6 +210,8 @@ export default function GLBViewer({ bodyColor, detailsColor, glassColor }: GLBVi
     animate()
 
     return () => {
+      renderer.domElement.removeEventListener('pointerdown', onPointerDown)
+      renderer.domElement.removeEventListener('pointermove', onPointerMove)
       renderer.dispose()
       mountRef.current?.removeChild(renderer.domElement)
     }
