@@ -1,31 +1,47 @@
 'use client'
 
-import { JSX, useState } from 'react'
+import { JSX, useEffect, useRef, useState } from 'react'
 import GLBViewer from '@/components/GLBViewer'
+import { meshDescriptions } from '@/components/meshDescription'
 
 export default function Home() {
   const [bodyColor, setBodyColor] = useState('#000000')
   const [detailsColor, setDetailsColor] = useState('#3333FF')
   const [glassColor, setGlassColor] = useState('#ffffff')
+  const [partColors, setPartColors] = useState<Record<string, string>>({})
 
-  const [description, setDescription] = useState<JSX.Element>(
-  <p>Klik bagian mobil untuk melihat deskripsi.</p>
-)
+  const [selectedPartName, setSelectedPartName] = useState<string | null>(null)
 
-  const meshDescriptions: Record<string, JSX.Element> = {
-  carpaint_door_FL_doorLayer: (
-    <div>
-      <h1 className="text-lg font-bold">Detail: Pintu depan kiri</h1>
-      <h2 className="text-sm text-gray-600">Pilih warna untuk menyesuaikan bagian ini</h2>
-    </div>
-  ),
-  carpaint_hood: (
-    <div>
-      <h1 className="text-lg font-bold">Detail: Kap Mesin</h1>
-      <p className="text-sm">Bagian atas mesin mobil, bisa dikustomisasi warnanya.</p>
-    </div>
-  ),
-  // ...tambahkan lainnya sesuai kebutuhan
+  const prevDetailsColor = useRef(detailsColor)
+
+useEffect(() => {
+  const detailParts = [
+    'carpaint_door_FL_doorLayer',
+    'carpaint_door_RL_doorLayer',
+    'carpaint_fenders_r',
+    'carpaint_trunk',
+    'carpaint_door_RR_doorLayer',
+    'carpaint_door_FR_doorLayer',
+    'carpaint_fenders_f',
+    'carpaint_hood',
+    'carpaint_windshield',
+  ]
+
+  setPartColors((prev) => {
+    const updated = { ...prev }
+    detailParts.forEach((name) => {
+      updated[name] = detailsColor
+    })
+    return updated
+  })
+}, [detailsColor])
+
+  function handleSelect(name: string) {
+  if (meshDescriptions[name]) {
+    setSelectedPartName(name)
+  } else {
+    setSelectedPartName(null)
+  }
 }
 
 
@@ -37,7 +53,7 @@ export default function Home() {
           <input type="color" value={bodyColor} onChange={(e) => setBodyColor(e.target.value)} />
         </label>
         <label className="block">
-          Details:
+          Body:
           <input type="color" value={detailsColor} onChange={(e) => setDetailsColor(e.target.value)} />
         </label>
         <label className="block">
@@ -47,15 +63,22 @@ export default function Home() {
       </div>
 
       <div className="absolute top-40 left-5 z-10 bg-black/70 text-white text-xs p-3 rounded-md max-w-xs font-mono">
-        {description}
-      </div>
+  {selectedPartName && meshDescriptions[selectedPartName]
+    ? meshDescriptions[selectedPartName](
+        partColors[selectedPartName] || '#ffffff',
+        (newColor) =>
+          setPartColors((prev) => ({ ...prev, [selectedPartName]: newColor }))
+      )
+    : <p>Klik bagian mobil untuk melihat deskripsi.</p>}
+</div>
+
 
       <GLBViewer
       bodyColor={bodyColor}
       detailsColor={detailsColor}
       glassColor={glassColor}
-      onSelectMaterial={setDescription}
-      meshDescriptions={meshDescriptions}
+      partColors={partColors}
+      onSelectMaterial={handleSelect}
     />
     </>
   )

@@ -27,7 +27,7 @@ export default function Manual() {
         </label>
       </div>
 
-      <GLBViewer bodyColor={bodyColor} detailsColor={detailsColor} glassColor={glassColor} />
+      {/* <GLBViewer bodyColor={bodyColor} detailsColor={detailsColor} glassColor={glassColor} /> */}
     </>
   )
 }

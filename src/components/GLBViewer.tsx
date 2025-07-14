@@ -16,17 +16,26 @@ interface GLBViewerProps {
   bodyColor: string
   detailsColor: string
   glassColor: string
-  onSelectMaterial?: (desc: JSX.Element) => void
-  meshDescriptions?: Record<string, JSX.Element>
+  partColors: Record<string, string>
+  onSelectMaterial?: (name: string) => void
 }
 
-export default function GLBViewer({ bodyColor, detailsColor, glassColor, onSelectMaterial, meshDescriptions, }: GLBViewerProps) {
+export default function GLBViewer({
+  bodyColor,
+  detailsColor,
+  glassColor,
+  partColors,
+  onSelectMaterial
+}: GLBViewerProps)
+{
   const mountRef = useRef<HTMLDivElement>(null)
   const materialsRef = useRef<{
-    body?: THREE.MeshPhysicalMaterial
-    details?: THREE.MeshStandardMaterial
-    glass?: THREE.MeshPhysicalMaterial
+  body?: THREE.MeshPhysicalMaterial
+  details?: THREE.MeshStandardMaterial
+  glass?: THREE.MeshPhysicalMaterial
+  [key: string]: THREE.MeshPhysicalMaterial | THREE.MeshStandardMaterial | undefined
   }>({})
+  const sceneRef = useRef<THREE.Scene | null>(null)
   const [cameraPos, setCameraPos] = useState({ x: 0, y: 0, z: 0 })
 
   const highlightableMeshes = new Set([
@@ -45,6 +54,7 @@ export default function GLBViewer({ bodyColor, detailsColor, glassColor, onSelec
 
   useEffect(() => {
     const scene = new THREE.Scene()
+    sceneRef.current = scene
     scene.background = new THREE.Color(0xffffff)
 
     // axis helper
@@ -59,7 +69,7 @@ export default function GLBViewer({ bodyColor, detailsColor, glassColor, onSelec
     })
 
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 350)
-    camera.position.set(8, 1, 0)
+    camera.position.set(8, 0.3, 0)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
@@ -88,25 +98,22 @@ export default function GLBViewer({ bodyColor, detailsColor, glassColor, onSelec
     const pointer = new THREE.Vector2()
 
     function onPointerDown(event: MouseEvent) {
-      const rect = renderer.domElement.getBoundingClientRect()
-      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+  const rect = renderer.domElement.getBoundingClientRect()
+  pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+  pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
 
-      raycaster.setFromCamera(pointer, camera)
-      const intersects = raycaster.intersectObjects(scene.children, true)
+  raycaster.setFromCamera(pointer, camera)
+  const intersects = raycaster.intersectObjects(scene.children, true)
 
-      if (intersects.length > 0) {
-      const mesh = intersects[0].object as THREE.Mesh
-      const name = mesh.name || mesh.parent?.name
+  if (intersects.length > 0) {
+    const mesh = intersects[0].object as THREE.Mesh
+    const name = mesh.name || mesh.parent?.name
 
-      if (typeof name === 'string' && meshDescriptions?.[name]) {
-        onSelectMaterial?.(meshDescriptions[name])
-      } else {
-        onSelectMaterial?.(<p>Bagian lain</p>)
-      }
+    if (typeof name === 'string') {
+      onSelectMaterial?.(name)
     }
-    }
-
+  }
+}
     renderer.domElement.addEventListener('pointerdown', onPointerDown)
 
 let hoveredMesh: THREE.Mesh | null = null
@@ -159,42 +166,56 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
     loader.setDRACOLoader(dracoLoader)
 
     loader.load('/ford.glb', (gltf: GLTF) => {
-      const carModel = gltf.scene.children[0] as THREE.Object3D
+  const carModel = gltf.scene.children[0] as THREE.Object3D
 
-      // Buat dan simpan material
-      const bodyMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(bodyColor), metalness: 1, roughness: 0.5, clearcoat: 1, clearcoatRoughness: 0.03 })
-      const detailsMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(detailsColor), metalness: 1, roughness: 0.5, clearcoat: 1, clearcoatRoughness: 0.03 })
-      const glassMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(glassColor), metalness: 0.25, roughness: 0, transmission: 1, transparent: true, opacity: 0.5 })
+  // Buat dan simpan material
+  const bodyMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(bodyColor), metalness: 1, roughness: 0.5, clearcoat: 1, clearcoatRoughness: 0.03 })
+  const glassMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(glassColor), metalness: 0.25, roughness: 0, transmission: 1, transparent: true, opacity: 0.5 })
 
-      materialsRef.current = { body: bodyMaterial, details: detailsMaterial, glass: glassMaterial }
+  // Buat material details untuk setiap mesh (agar bisa diubah satu per satu)
+  const detailNames = [
+    'carpaint_door_FL_doorLayer',
+    'carpaint_door_RL_doorLayer',
+    'carpaint_fenders_r',
+    'carpaint_trunk',
+    'carpaint_door_RR_doorLayer',
+    'carpaint_door_FR_doorLayer',
+    'carpaint_fenders_f',
+    'carpaint_hood',
+    'carpaint_windshield',
+  ]
 
-      const body = carModel.getObjectByName('glass_headlight')
-        if (body && (body as THREE.Mesh).material) {
-        (body as THREE.Mesh).material = bodyMaterial
-        }
-      const seat = carModel.getObjectByName('carpaint_door_FL_doorLayer') as THREE.Mesh
-        if (seat) seat.material = detailsMaterial.clone()
-      const rimFL = carModel.getObjectByName('carpaint_door_RL_doorLayer') as THREE.Mesh
-        if (rimFL) rimFL.material = detailsMaterial.clone()
-      const rimFR = carModel.getObjectByName('carpaint_fenders_r') as THREE.Mesh
-        if (rimFR) rimFR.material = detailsMaterial.clone()
-      const rimRR = carModel.getObjectByName('carpaint_trunk') as THREE.Mesh
-        if (rimRR) rimRR.material = detailsMaterial.clone()
-      const rimRL = carModel.getObjectByName('carpaint_door_RR_doorLayer') as THREE.Mesh
-        if (rimRL) rimRL.material = detailsMaterial.clone()
-      const Trim = carModel.getObjectByName('carpaint_door_FR_doorLayer') as THREE.Mesh
-        if (Trim) Trim.material = detailsMaterial.clone()
-      const Trim1 = carModel.getObjectByName('carpaint_fenders_f') as THREE.Mesh
-        if (Trim1) Trim1.material = detailsMaterial.clone()
-      const hood = carModel.getObjectByName('carpaint_hood') as THREE.Mesh
-        if (hood) hood.material = detailsMaterial.clone()
-      const wind = carModel.getObjectByName('carpaint_windshield') as THREE.Mesh
-        if (wind) wind.material = detailsMaterial.clone()
-      const Glass = carModel.getObjectByName('glassDark_windshield') as THREE.Mesh
-        if (Glass) Glass.material = glassMaterial
+  materialsRef.current = {
+  body: bodyMaterial,
+  glass: glassMaterial,
+  ...materialsRef.current // jaga-jaga agar tidak hilang saat rerender
+}
 
-      scene.add(carModel)
+detailNames.forEach(name => {
+  const part = carModel.getObjectByName(name) as THREE.Mesh
+  if (part) {
+    const mat = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color(detailsColor),
+      metalness: 1,
+      roughness: 0.5,
+      clearcoat: 1,
+      clearcoatRoughness: 0.03
     })
+    part.material = mat
+    part.userData.isDetail = true
+    materialsRef.current[name] = mat // <== simpan referensi material berdasarkan nama
+  }
+})
+
+  // Tambahan
+  const Glass = carModel.getObjectByName('glassDark_windshield') as THREE.Mesh
+  if (Glass) Glass.material = glassMaterial
+
+  const Headlight = carModel.getObjectByName('glass_headlight') as THREE.Mesh
+  if (Headlight) Headlight.material = bodyMaterial
+
+  scene.add(carModel)
+})
 
     const animate = () => {
       requestAnimationFrame(animate)
@@ -216,6 +237,19 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
       mountRef.current?.removeChild(renderer.domElement)
     }
   }, [])
+
+ useEffect(() => {
+  sceneRef.current?.traverse((child) => {
+    if ((child as THREE.Mesh).isMesh) {
+      const mesh = child as THREE.Mesh
+      const color = partColors[mesh.name]
+      if (color) {
+        const mat = mesh.material as THREE.MeshStandardMaterial
+        mat.color.set(color)
+      }
+    }
+  })
+}, [partColors])
 
   useEffect(() => {
     // Update warna saat props berubah
