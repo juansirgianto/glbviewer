@@ -35,7 +35,15 @@ const DEFAULT_RIM_PARTS = [
   'rimDark_003_wheelsLayer',
 ]
 
-const ALL_CUSTOMIZABLE_PARTS = [...DEFAULT_DETAIL_PARTS, ...DEFAULT_RIM_PARTS]
+const DEFAULT_GLASS_PARTS = [
+  'glass_headlight',
+]
+
+const ALL_CUSTOMIZABLE_PARTS = [
+  ...DEFAULT_DETAIL_PARTS,
+  ...DEFAULT_RIM_PARTS,
+  ...DEFAULT_GLASS_PARTS,
+]
 
 function handleReset() {
   setBodyColor(DEFAULT_BODY_COLOR)
@@ -47,6 +55,8 @@ function handleReset() {
   ALL_CUSTOMIZABLE_PARTS.forEach((name) => {
     if (DEFAULT_RIM_PARTS.includes(name)) {
       resetPartColors[name] = '#888888'
+    } else if (DEFAULT_GLASS_PARTS.includes(name)) {
+      resetPartColors[name] = DEFAULT_GLASS_COLOR
     } else {
       resetPartColors[name] = DEFAULT_DETAILS_COLOR
     }

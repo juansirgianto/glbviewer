@@ -97,7 +97,7 @@ export default function GLBViewer({
     // scene.add(directionalLight)
 
     const controls = new OrbitControls(camera, renderer.domElement)
-    controls.target.set(0, 1, 0)
+    controls.target.set(0, 0, 0)
     controls.update()
 
     const raycaster = new THREE.Raycaster()
