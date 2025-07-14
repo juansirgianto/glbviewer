@@ -12,7 +12,6 @@ export default function Home() {
   const [detailsRim, setDetailsRim] = useState('#888888') // warna default rim
   const [partColors, setPartColors] = useState<Record<string, string>>({})
   const [selectedPartName, setSelectedPartName] = useState<string | null>(null)
-  const { basePath } = useRouter()
 
   const DEFAULT_BODY_COLOR = '#ffffff'
 const DEFAULT_DETAILS_COLOR = '#3333FF'
@@ -154,7 +153,7 @@ useEffect(() => {
       </div>
 
       <div className='absolute w-[300px] top-1 left-1/2 -translate-x-1/2'>
-        <img src={`${basePath}/ford-logo.png`} />
+        <img src={'/ford-logo.png'} />
       </div>
 
       <GLBViewer
