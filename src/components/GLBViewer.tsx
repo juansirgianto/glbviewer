@@ -11,6 +11,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 // @ts-ignore
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
+import { useRouter } from 'next/router'
+const { basePath } = useRouter()
 
 interface GLBViewerProps {
   bodyColor: string
@@ -69,7 +71,7 @@ export default function GLBViewer({
 
     // Load HDR Environment
     const rgbeLoader = new RGBELoader()
-    rgbeLoader.load('/hdr/studio.hdr', (texture: THREE.DataTexture) => {
+    rgbeLoader.load(`${basePath}/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping
       scene.environment = texture
     })
@@ -171,7 +173,7 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
     const loader = new GLTFLoader()
     loader.setDRACOLoader(dracoLoader)
 
-    loader.load('/ford.glb', (gltf: GLTF) => {
+    loader.load(`${basePath}/ford.glb`, (gltf: GLTF) => {
   const carModel = gltf.scene.children[0] as THREE.Object3D
 
   // Buat dan simpan material

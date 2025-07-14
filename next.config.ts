@@ -1,7 +1,12 @@
-import type { NextConfig } from "next";
+// next.config.js
+/** @type {import('next').NextConfig} */
 
-const nextConfig: NextConfig = {
-  output: "export",
-};
+const isProd = process.env.NODE_ENV === 'production'
 
-export default nextConfig;
+const nextConfig = {
+  output: 'export',
+  basePath: isProd ? '/glbviewer' : '',
+  assetPrefix: isProd ? '/glbviewer/' : '',
+}
+
+export default nextConfig
