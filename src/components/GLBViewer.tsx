@@ -308,7 +308,7 @@ const detailRims = [
       fontFamily: 'monospace',
       zIndex: 10
     }}>
-      Camera: x={cameraPos.x} y={cameraPos.y} z={cameraPos.z}
+      {/* Camera: x={cameraPos.x} y={cameraPos.y} z={cameraPos.z} */}
     </div>
   </>
 )
