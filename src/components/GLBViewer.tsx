@@ -175,8 +175,13 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
   const carModel = gltf.scene.children[0] as THREE.Object3D
 
   // Buat dan simpan material
-  const bodyMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(bodyColor), metalness: 1, roughness: 0.5, clearcoat: 1, clearcoatRoughness: 0.03 })
+  const bodyMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(bodyColor), metalness: 0.25, roughness: 0, transparent: true, opacity: 0.5 })
   const glassMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(glassColor), metalness: 0.25, roughness: 0, transmission: 1, transparent: true, opacity: 0.5 })
+  materialsRef.current = {
+  body: bodyMaterial,
+  glass: glassMaterial,
+  ...materialsRef.current // jaga-jaga agar tidak hilang saat rerender
+}
 
   // Buat material details untuk setiap mesh (agar bisa diubah satu per satu)
   const detailNames = [
@@ -189,13 +194,14 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
     'carpaint_fenders_f',
     'carpaint_hood',
     'carpaint_windshield',
+    'carpaint_handle_door_fl_doorLayer',
+    'carpaint_handle_door_rl_doorLayer',
+    'carpaint_handle_door_rr_doorLayer',
+    'carpaint_handle_door_fr_doorLayer',
+    'carpaint_door_r',
+    'carpaint_sideskirts',
   ]
 
-  materialsRef.current = {
-  body: bodyMaterial,
-  glass: glassMaterial,
-  ...materialsRef.current // jaga-jaga agar tidak hilang saat rerender
-}
 
 detailNames.forEach(name => {
   const part = carModel.getObjectByName(name) as THREE.Mesh

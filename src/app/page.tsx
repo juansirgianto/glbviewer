@@ -5,14 +5,14 @@ import GLBViewer from '@/components/GLBViewer'
 import { meshDescriptions } from '@/components/meshDescription'
 
 export default function Home() {
-  const [bodyColor, setBodyColor] = useState('#000000')
+  const [bodyColor, setBodyColor] = useState('#ffffff')
   const [detailsColor, setDetailsColor] = useState('#3333FF')
   const [glassColor, setGlassColor] = useState('#ffffff')
   const [detailsRim, setDetailsRim] = useState('#888888') // warna default rim
   const [partColors, setPartColors] = useState<Record<string, string>>({})
   const [selectedPartName, setSelectedPartName] = useState<string | null>(null)
 
-  const DEFAULT_BODY_COLOR = '#000000'
+  const DEFAULT_BODY_COLOR = '#ffffff'
 const DEFAULT_DETAILS_COLOR = '#3333FF'
 const DEFAULT_GLASS_COLOR = '#ffffff'
 
@@ -69,6 +69,12 @@ useEffect(() => {
     'carpaint_fenders_f',
     'carpaint_hood',
     'carpaint_windshield',
+    'carpaint_handle_door_fl_doorLayer',
+    'carpaint_handle_door_rl_doorLayer',
+    'carpaint_handle_door_rr_doorLayer',
+    'carpaint_handle_door_fr_doorLayer',
+    'carpaint_door_r',
+    'carpaint_sideskirts',
   ]
 
   setPartColors((prev) => {
@@ -125,7 +131,7 @@ useEffect(() => {
         </button>
       </div>
 
-      <div className="absolute top-5 right-5 z-10 bg-[#1D4075] text-white text-xs p-3 rounded-md max-w-xs font-mono">
+      <div className="absolute top-5 right-5 z-10 bg-[#1D4075] text-white text-xs p-3 rounded-md max-w-[400px] font-mono">
         {selectedPartName && meshDescriptions[selectedPartName]
           ? meshDescriptions[selectedPartName](
               partColors[selectedPartName] || '#ffffff',
