@@ -17,6 +17,7 @@ interface GLBViewerProps {
   detailsColor: string
   glassColor: string
   partColors: Record<string, string>
+  detailsRim: string
   onSelectMaterial?: (name: string) => void
 }
 
@@ -25,6 +26,7 @@ export default function GLBViewer({
   detailsColor,
   glassColor,
   partColors,
+  detailsRim,
   onSelectMaterial
 }: GLBViewerProps)
 {
@@ -50,16 +52,20 @@ export default function GLBViewer({
   'carpaint_hood',
   'carpaint_windshield',
   'glassDark_windshield',
+  'rimDark_000_wheelsLayer',
+  'rimDark_001_wheelsLayer',
+  'rimDark_002_wheelsLayer',
+  'rimDark_003_wheelsLayer',
 ])
 
   useEffect(() => {
     const scene = new THREE.Scene()
     sceneRef.current = scene
-    scene.background = new THREE.Color(0xffffff)
+    scene.background = new THREE.Color(0x888888)
 
     // axis helper
-    const axesHelper = new THREE.AxesHelper(2) // ukuran 2 unit
-    scene.add(axesHelper)
+    // const axesHelper = new THREE.AxesHelper(2) // ukuran 2 unit
+    // scene.add(axesHelper)
 
     // Load HDR Environment
     const rgbeLoader = new RGBELoader()
@@ -69,7 +75,7 @@ export default function GLBViewer({
     })
 
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 350)
-    camera.position.set(8, 0.3, 0)
+    camera.position.set(5.82, 1.69, -5.55)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
@@ -207,6 +213,29 @@ detailNames.forEach(name => {
   }
 })
 
+const detailRims = [
+    'rimDark_000_wheelsLayer',
+    'rimDark_001_wheelsLayer',
+    'rimDark_002_wheelsLayer',
+    'rimDark_003_wheelsLayer',
+  ]
+
+  detailRims.forEach(name => {
+  const rim = carModel.getObjectByName(name) as THREE.Mesh
+  if (rim) {
+    const mat = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color(detailsRim),
+      metalness: 1,
+      roughness: 0.5,
+      clearcoat: 1,
+      clearcoatRoughness: 0.03
+    })
+    rim.material = mat
+    rim.userData.isDetail = true
+    materialsRef.current[name] = mat // <== simpan referensi material berdasarkan nama
+  }
+})
+
   // Tambahan
   const Glass = carModel.getObjectByName('glassDark_windshield') as THREE.Mesh
   if (Glass) Glass.material = glassMaterial
@@ -263,7 +292,7 @@ detailNames.forEach(name => {
     <div ref={mountRef} style={{ width: '100vw', height: '100vh' }} />
     <div style={{
       position: 'absolute',
-      top: 10,
+      bottom: 10,
       right: 10,
       background: 'rgba(0,0,0,0.6)',
       color: '#fff',
