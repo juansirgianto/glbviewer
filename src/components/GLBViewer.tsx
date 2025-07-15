@@ -371,10 +371,13 @@ const detailRims = [
 
     const mesh = scene.getObjectByName(partName) as THREE.Mesh
     if (mesh) {
-      const texture = new THREE.TextureLoader().load(texturePath)
-      const mat = createTriplanarMaterial(texture, 5.0)
-      mesh.material = mat
-      materialsRef.current[partName] = mat
+      new THREE.TextureLoader().load(texturePath, (texture) => {
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping // ⬅ penting
+  const mat = createTriplanarMaterial(texture, 5.0)
+  mesh.material = mat
+  materialsRef.current[partName] = mat
+})
+
     }
   }
 
