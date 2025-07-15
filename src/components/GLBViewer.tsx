@@ -353,7 +353,8 @@ const detailRims = [
     if (!mesh) return
 
     if (mode === 'texture') {
-      const texture = new THREE.TextureLoader().load('/texture/carbon.jpg')
+      // const texture = new THREE.TextureLoader().load('/texture/carbon.jpg')
+      const texture = new THREE.TextureLoader().load('/glbviewer/texture/carbon.jpg')
       const mat = createTriplanarMaterial(texture, 5.0)
       mesh.material = mat
       materialsRef.current[name] = mat
