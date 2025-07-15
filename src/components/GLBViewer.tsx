@@ -363,6 +363,12 @@ const detailRims = [
 }, [])
 
  useEffect(() => {
+  const DEFAULT_RIM_PARTS = [
+  'rimDark_000_wheelsLayer',
+  'rimDark_001_wheelsLayer',
+  'rimDark_002_wheelsLayer',
+  'rimDark_003_wheelsLayer',
+]
   Object.entries(partMode).forEach(([name, mode]) => {
     const mesh = sceneRef.current?.getObjectByName(name) as THREE.Mesh
     if (!mesh) return
@@ -374,7 +380,8 @@ const detailRims = [
       mesh.material = mat
       materialsRef.current[name] = mat
     } else if (mode === 'color') {
-      const color = partColors[name] || '#ffffff'
+      const isRim = DEFAULT_RIM_PARTS.includes(name)
+      const color = partColors[name] || (isRim ? detailsRim : detailsColor)
       const mat = new THREE.MeshPhysicalMaterial({
         color: new THREE.Color(color),
         metalness: 1,
@@ -389,15 +396,24 @@ const detailRims = [
 }, [partMode, partColors])
 
   useEffect(() => {
+    const DEFAULT_RIM_PARTS = [
+  'rimDark_000_wheelsLayer',
+  'rimDark_001_wheelsLayer',
+  'rimDark_002_wheelsLayer',
+  'rimDark_003_wheelsLayer',
+]
   const bodyMat = materialsRef.current.body
   if (bodyMat && 'color' in bodyMat) {
     (bodyMat as any).color.set(bodyColor)
   }
 
   Object.entries(materialsRef.current).forEach(([name, mat]) => {
+  const isRim = DEFAULT_RIM_PARTS.includes(name)
+
   if (
     mat &&
     !['body', 'glass'].includes(name) &&
+    !isRim && // ⛔ hindari update rim di sini
     partMode[name] !== 'texture' &&
     'color' in mat &&
     mat.color instanceof THREE.Color

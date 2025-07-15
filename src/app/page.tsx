@@ -21,23 +21,18 @@ export default function Home() {
   rimDark_001_wheelsLayer: 'color',
   rimDark_002_wheelsLayer: 'color',
   rimDark_003_wheelsLayer: 'color',
+  carpaint_door_FL_doorLayer: 'color',
+  carpaint_door_RL_doorLayer: 'color',
+  carpaint_fenders_r: 'color',
+  carpaint_trunk: 'color',
+  carpaint_door_RR_doorLayer: 'color',
+  carpaint_door_FR_doorLayer: 'color',
+  carpaint_fenders_f: 'color',
+  carpaint_windshield: 'color',
 })
 
   const DEFAULT_BODY_COLOR = '#ffffff'
 const DEFAULT_DETAILS_COLOR = '#3333FF'
-const DEFAULT_GLASS_COLOR = '#ffffff'
-
-const DEFAULT_DETAIL_PARTS = [
-  'carpaint_door_FL_doorLayer',
-  'carpaint_door_RL_doorLayer',
-  'carpaint_fenders_r',
-  'carpaint_trunk',
-  'carpaint_door_RR_doorLayer',
-  'carpaint_door_FR_doorLayer',
-  'carpaint_fenders_f',
-  'carpaint_hood',
-  'carpaint_windshield',
-]
 
 const DEFAULT_RIM_PARTS = [
   'rimDark_000_wheelsLayer',
@@ -46,50 +41,7 @@ const DEFAULT_RIM_PARTS = [
   'rimDark_003_wheelsLayer',
 ]
 
-const DEFAULT_GLASS_PARTS = [
-  'glass_headlight',
-]
-
-const ALL_CUSTOMIZABLE_PARTS = [
-  ...DEFAULT_DETAIL_PARTS,
-  ...DEFAULT_RIM_PARTS,
-  ...DEFAULT_GLASS_PARTS,
-]
-
-function handleReset() {
-  setBodyColor(DEFAULT_BODY_COLOR)
-  setDetailsColor(DEFAULT_DETAILS_COLOR)
-  setDetailsRim('#888888')
-  setGlassColor(DEFAULT_GLASS_COLOR)
-  setPartMode({ carpaint_hood: 'color' })
-  setRimMode('color')
-
-  // Reset warna semua part
-  const resetPartColors: Record<string, string> = {}
-  const resetPartMode: Record<string, 'color' | 'texture'> = {}
-
-  ALL_CUSTOMIZABLE_PARTS.forEach((name) => {
-    if (DEFAULT_RIM_PARTS.includes(name)) {
-      resetPartColors[name] = '#888888'
-    } else if (DEFAULT_GLASS_PARTS.includes(name)) {
-      resetPartColors[name] = DEFAULT_GLASS_COLOR
-    } else {
-      resetPartColors[name] = DEFAULT_DETAILS_COLOR
-    }
-
-    // Semua kembali ke mode warna
-    resetPartMode[name] = 'color'
-  })
-
-  setPartColors(resetPartColors)
-  setPartMode(resetPartMode)
-  setSelectedPartName(null)
-}
-
-  const prevDetailsColor = useRef(detailsColor)
-
-useEffect(() => {
-  const detailParts = [
+const DEFAULT_DETAIL_PARTS = [
     'carpaint_door_FL_doorLayer',
     'carpaint_door_RL_doorLayer',
     'carpaint_fenders_r',
@@ -107,15 +59,52 @@ useEffect(() => {
     'carpaint_sideskirts',
   ]
 
+const ALL_CUSTOMIZABLE_PARTS = [
+  ...DEFAULT_DETAIL_PARTS,
+  ...DEFAULT_RIM_PARTS,
+]
+
+function handleReset() {
+  setBodyColor(DEFAULT_BODY_COLOR)
+  setDetailsColor(DEFAULT_DETAILS_COLOR)
+  setDetailsRim('#888888')
+  setPartMode({ carpaint_hood: 'color' })
+  setRimMode('color')
+
+  // Reset warna semua part
+  const resetPartColors: Record<string, string> = {}
+  const resetPartMode: Record<string, 'color' | 'texture'> = {}
+
+  ALL_CUSTOMIZABLE_PARTS.forEach((name) => {
+    if (DEFAULT_RIM_PARTS.includes(name)) {
+      resetPartColors[name] = '#888888'
+    } else {
+      resetPartColors[name] = DEFAULT_DETAILS_COLOR
+    }
+
+    // Semua kembali ke mode warna
+    resetPartMode[name] = 'color'
+  })
+
+  setPartColors(resetPartColors)
+  setPartMode(resetPartMode)
+  setSelectedPartName(null)
+}
+
+  const prevDetailsColor = useRef(detailsColor)
+
+// Untuk update warna detail parts
+useEffect(() => {
   setPartColors((prev) => {
     const updated = { ...prev }
-    detailParts.forEach((name) => {
+    DEFAULT_DETAIL_PARTS.forEach((name) => {
       updated[name] = detailsColor
     })
     return updated
   })
 }, [detailsColor])
 
+// Untuk update warna rim parts
 useEffect(() => {
   setPartColors((prev) => {
     const updated = { ...prev }
