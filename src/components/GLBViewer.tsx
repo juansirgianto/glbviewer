@@ -418,7 +418,7 @@ const detailRims = [
   return (
   <>
     <div ref={mountRef} style={{ width: '100vw', height: '100vh' }} />
-    <div style={{
+    {/* <div style={{
       position: 'absolute',
       bottom: 10,
       right: 10,
@@ -429,8 +429,8 @@ const detailRims = [
       fontFamily: 'monospace',
       zIndex: 10
     }}>
-      {/* Camera: x={cameraPos.x} y={cameraPos.y} z={cameraPos.z} */}
-    </div>
+      Camera: x={cameraPos.x} y={cameraPos.y} z={cameraPos.z}
+    </div> */}
   </>
 )
 
