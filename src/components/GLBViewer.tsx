@@ -19,7 +19,46 @@ interface GLBViewerProps {
   glassColor: string
   partColors: Record<string, string>
   detailsRim: string
+  partMode: Record<string, 'color' | 'texture'>
   onSelectMaterial?: (name: string) => void
+}
+
+function createTriplanarMaterial(texture: THREE.Texture, scale: number = 4.0) {
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      map: { value: texture },
+      scale: { value: scale }
+    },
+    vertexShader: `
+      varying vec3 vWorldPosition;
+      void main() {
+        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+        vWorldPosition = worldPosition.xyz;
+        gl_Position = projectionMatrix * viewMatrix * worldPosition;
+      }
+    `,
+    fragmentShader: `
+      uniform sampler2D map;
+      uniform float scale;
+      varying vec3 vWorldPosition;
+
+      vec4 sampleTriplanar(vec3 pos) {
+        vec3 scaled = pos * scale;
+        vec2 uvX = scaled.yz;
+        vec2 uvY = scaled.zx;
+        vec2 uvZ = scaled.xy;
+        vec4 xSample = texture2D(map, uvX);
+        vec4 ySample = texture2D(map, uvY);
+        vec4 zSample = texture2D(map, uvZ);
+        return (xSample + ySample + zSample) / 3.0;
+      }
+
+      void main() {
+        gl_FragColor = sampleTriplanar(vWorldPosition);
+      }
+    `
+  })
 }
 
 export default function GLBViewer({
@@ -28,16 +67,13 @@ export default function GLBViewer({
   glassColor,
   partColors,
   detailsRim,
+  partMode,
   onSelectMaterial
 }: GLBViewerProps)
 {
   const mountRef = useRef<HTMLDivElement>(null)
-  const materialsRef = useRef<{
-  body?: THREE.MeshPhysicalMaterial
-  details?: THREE.MeshStandardMaterial
-  glass?: THREE.MeshPhysicalMaterial
-  [key: string]: THREE.MeshPhysicalMaterial | THREE.MeshStandardMaterial | undefined
-  }>({})
+  const materialsRef = useRef<Record<string, THREE.Material | undefined>>({})
+
   const sceneRef = useRef<THREE.Scene | null>(null)
   const [cameraPos, setCameraPos] = useState({ x: 0, y: 0, z: 0 })
 
@@ -71,6 +107,7 @@ export default function GLBViewer({
     // Load HDR Environment
     const rgbeLoader = new RGBELoader()
     rgbeLoader.load(`/glbviewer/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
+    // rgbeLoader.load(`/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping
       scene.environment = texture
     })
@@ -88,9 +125,9 @@ export default function GLBViewer({
     // renderer.toneMapping = THREE.ACESFilmicToneMapping
     // renderer.toneMappingExposure = 0.5
 
-    // const ambientLight = new THREE.AmbientLight(0xffffff, 1.0)
-    // ambientLight.position.set(5.4, 2.1, 7.5)
-    // scene.add(ambientLight)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.0)
+    ambientLight.position.set(5.4, 2.1, 7.5)
+    scene.add(ambientLight)
 
     // const directionalLight = new THREE.DirectionalLight(0xffffff, 15.0)
     // directionalLight.position.set(0, 5, 0)
@@ -141,38 +178,52 @@ function onPointerMove(event: MouseEvent) {
     if (name && highlightableMeshes.has(name)) {
       renderer.domElement.style.cursor = 'pointer'
 
-      if (hoveredMesh !== mesh) {
-        if (hoveredMesh && originalColor) {
-          (hoveredMesh.material as THREE.MeshStandardMaterial).color.copy(originalColor)
+      // Reset warna mesh sebelumnya
+      if (hoveredMesh && originalColor) {
+        const mat = hoveredMesh.material as THREE.Material
+        if ('color' in mat && mat.color instanceof THREE.Color) {
+          mat.color.copy(originalColor)
         }
+      }
 
-        hoveredMesh = mesh
-        originalColor = (mesh.material as THREE.MeshStandardMaterial).color.clone()
+      // Simpan mesh dan warnanya
+      hoveredMesh = mesh
+      const mat = mesh.material as THREE.Material
+      if ('color' in mat && mat.color instanceof THREE.Color) {
+        originalColor = mat.color.clone()
         const highlightedColor = originalColor.clone().multiplyScalar(0.3)
-        ;(mesh.material as THREE.MeshStandardMaterial).color.copy(highlightedColor)
+        mat.color.copy(highlightedColor)
+      } else {
+        originalColor = null
       }
 
       return
     }
   }
 
+  // Reset cursor & warna
   renderer.domElement.style.cursor = 'default'
-
   if (hoveredMesh && originalColor) {
-    ;(hoveredMesh.material as THREE.MeshStandardMaterial).color.copy(originalColor)
-    hoveredMesh = null
-    originalColor = null
+    const mat = hoveredMesh.material as THREE.Material
+    if ('color' in mat && mat.color instanceof THREE.Color) {
+      mat.color.copy(originalColor)
+    }
   }
+
+  hoveredMesh = null
+  originalColor = null
 }
 
 renderer.domElement.addEventListener('pointermove', onPointerMove)
 
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/glbviewer/draco/')
+    // dracoLoader.setDecoderPath('/draco/')
     const loader = new GLTFLoader()
     loader.setDRACOLoader(dracoLoader)
 
     loader.load(`/glbviewer/ford.glb`, (gltf: GLTF) => {
+    // loader.load(`/ford.glb`, (gltf: GLTF) => {
   const carModel = gltf.scene.children[0] as THREE.Object3D
 
   // Buat dan simpan material
@@ -216,7 +267,7 @@ detailNames.forEach(name => {
     })
     part.material = mat
     part.userData.isDetail = true
-    materialsRef.current[name] = mat // <== simpan referensi material berdasarkan nama
+    materialsRef.current[name] = mat
   }
 })
 
@@ -274,25 +325,70 @@ const detailRims = [
     }
   }, [])
 
+  useEffect(() => {
+  function handleApplyTexture(e: CustomEvent) {
+    const { partName, texturePath } = e.detail
+    const scene = sceneRef.current
+    if (!scene) return
+
+    const mesh = scene.getObjectByName(partName) as THREE.Mesh
+    if (mesh) {
+      const texture = new THREE.TextureLoader().load(texturePath)
+      const mat = createTriplanarMaterial(texture, 5.0)
+      mesh.material = mat
+      materialsRef.current[partName] = mat
+    }
+  }
+
+  window.addEventListener('apply-texture', handleApplyTexture as EventListener)
+
+  return () => {
+    window.removeEventListener('apply-texture', handleApplyTexture as EventListener)
+  }
+}, [])
+
  useEffect(() => {
-  sceneRef.current?.traverse((child) => {
-    if ((child as THREE.Mesh).isMesh) {
-      const mesh = child as THREE.Mesh
-      const color = partColors[mesh.name]
-      if (color) {
-        const mat = mesh.material as THREE.MeshStandardMaterial
-        mat.color.set(color)
-      }
+  Object.entries(partMode).forEach(([name, mode]) => {
+    const mesh = sceneRef.current?.getObjectByName(name) as THREE.Mesh
+    if (!mesh) return
+
+    if (mode === 'texture') {
+      const texture = new THREE.TextureLoader().load('/texture/carbon.jpg')
+      const mat = createTriplanarMaterial(texture, 5.0)
+      mesh.material = mat
+      materialsRef.current[name] = mat
+    } else if (mode === 'color') {
+      const color = partColors[name] || '#ffffff'
+      const mat = new THREE.MeshPhysicalMaterial({
+        color: new THREE.Color(color),
+        metalness: 1,
+        roughness: 0.5,
+        clearcoat: 1,
+        clearcoatRoughness: 0.03
+      })
+      mesh.material = mat
+      materialsRef.current[name] = mat
     }
   })
-}, [partColors])
+}, [partMode, partColors])
+
 
   useEffect(() => {
-    // Update warna saat props berubah
-    materialsRef.current.body?.color.set(bodyColor)
-    materialsRef.current.details?.color.set(detailsColor)
-    materialsRef.current.glass?.color.set(glassColor)
-  }, [bodyColor, detailsColor, glassColor])
+  const bodyMat = materialsRef.current.body
+  if (bodyMat && 'color' in bodyMat) {
+    (bodyMat as any).color.set(bodyColor)
+  }
+
+  const detailsMat = materialsRef.current.details
+  if (detailsMat && 'color' in detailsMat) {
+    (detailsMat as any).color.set(detailsColor)
+  }
+
+  const glassMat = materialsRef.current.glass
+  if (glassMat && 'color' in glassMat) {
+    (glassMat as any).color.set(glassColor)
+  }
+}, [bodyColor, detailsColor, glassColor])
 
   return (
   <>

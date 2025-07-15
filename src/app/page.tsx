@@ -1,3 +1,5 @@
+// page.tsx
+
 'use client'
 
 import { JSX, useEffect, useRef, useState } from 'react'
@@ -12,6 +14,9 @@ export default function Home() {
   const [detailsRim, setDetailsRim] = useState('#888888') // warna default rim
   const [partColors, setPartColors] = useState<Record<string, string>>({})
   const [selectedPartName, setSelectedPartName] = useState<string | null>(null)
+  const [partMode, setPartMode] = useState<Record<string, 'color' | 'texture'>>({
+  carpaint_hood: 'color'
+})
 
   const DEFAULT_BODY_COLOR = '#ffffff'
 const DEFAULT_DETAILS_COLOR = '#3333FF'
@@ -115,6 +120,13 @@ useEffect(() => {
   }
 }
 
+function applyTextureToPart(partName: string, texturePath: string) {
+  const event = new CustomEvent('apply-texture', {
+    detail: { partName, texturePath }
+  })
+  window.dispatchEvent(event)
+}
+
   return (
     <>
       <div className="absolute top-5 left-5 z-10 bg-[#1D4075] p-4 rounded-md shadow text-sm space-y-2 text-white">
@@ -144,16 +156,24 @@ useEffect(() => {
 
       <div className="absolute top-5 right-5 z-10 bg-[#1D4075] text-white text-xs p-3 rounded-md max-w-[400px] font-mono">
         {selectedPartName && meshDescriptions[selectedPartName]
-          ? meshDescriptions[selectedPartName](
-              partColors[selectedPartName] || '#ffffff',
-              (newColor) =>
-                setPartColors((prev) => ({ ...prev, [selectedPartName]: newColor }))
-            )
-          : <p>Click car part for details.</p>}
+        ? meshDescriptions[selectedPartName](
+  partColors[selectedPartName] || '#ffffff',
+  (newColor) => setPartColors((prev) => ({ ...prev, [selectedPartName]: newColor })),
+  partMode[selectedPartName] || 'color',
+  (newMode) => setPartMode((prev) => ({ ...prev, [selectedPartName]: newMode })),
+  (part, texture) => {
+    const event = new CustomEvent('apply-texture', {
+      detail: { partName: part, texturePath: texture }
+    })
+    window.dispatchEvent(event)
+  }
+)
+        : <p>Click car part for details.</p>}
       </div>
 
       <div className='absolute w-[300px] top-1 left-1/2 -translate-x-1/2'>
         <img src={'/glbviewer/ford-logo.png'} />
+        {/* <img src={'/ford-logo.png'} /> */}
       </div>
 
       <GLBViewer
@@ -162,6 +182,7 @@ useEffect(() => {
       glassColor={glassColor}
       partColors={partColors}
       detailsRim={detailsRim}
+      partMode={partMode}
       onSelectMaterial={handleSelect}
     />
     </>

@@ -1,6 +1,9 @@
+// meshDescription.tsx
+
 import React, { JSX } from 'react'
 
-export const meshDescriptions: Record<string, (color: string, setColor: (v: string) => void) => JSX.Element> = {
+export const meshDescriptions: Record<string, (color: string, setColor: (v: string) => void, mode: 'color' | 'texture', setMode: (v: 'color' | 'texture') => void, applyTexture?: (part: string, texPath: string) => void)
+ => JSX.Element> = {
   carpaint_door_FL_doorLayer: (color, onChange) => (
     <div>
       <h1 className="text-xl font-bold">Front Left Door</h1>
@@ -81,13 +84,42 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       <input type="color" value={color} onChange={(e) => onChange(e.target.value)} />
     </div>
   ),
-  carpaint_hood: (color, onChange) => (
-    <div>
-      <h1 className="text-lg font-bold">Hood</h1>
-      <p className='text-lg'>Choose color for this part:</p>
-      <input type="color" value={color} onChange={(e) => onChange(e.target.value)} />
+  carpaint_hood: (color, onChange, mode, setMode, applyTexture) => (
+  <div>
+    <h1 className="text-lg font-bold">Hood</h1>
+
+<div className='flex gap-2'>
+    <label className='text-lg items-center flex'>
+      <input
+        type="radio"
+        checked={mode === 'color'}
+        onChange={() => setMode('color')}
+      />
+      Warna
+    </label>
+    <label className='text-lg items-center flex'>
+      <input
+        type="radio"
+        checked={mode === 'texture'}
+        onChange={() => {
+          setMode('texture')
+          applyTexture?.('carpaint_hood', '/texture/carbon.jpg')
+        }}
+      />
+      Tekstur
+    </label>
     </div>
-  ),
+
+    {mode === 'color' ? (
+      <>
+        <p className="text-lg mt-2">Pilih warna:</p>
+        <input type="color" value={color} onChange={(e) => onChange(e.target.value)} />
+      </>
+    ) : (
+      <p className="italic mt-2">Tekstur aktif: carbon</p>
+    )}
+  </div>
+),
   glassDark_windshield: (color, onChange) => (
     <div>
       <h1 className="text-lg font-bold">Glass: Windshield</h1>
