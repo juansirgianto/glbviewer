@@ -310,9 +310,11 @@ const detailRims = [
     const mat = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(detailsRim),
       metalness: 1,
-      roughness: 0.5,
-      clearcoat: 1,
-      clearcoatRoughness: 0.03
+      roughness: 0.2,
+      clearcoat: 0.9,
+      clearcoatRoughness: 0.03,
+      reflectivity: 0.5,
+      envMapIntensity: 1.0,
     })
     rim.material = mat
     rim.userData.isDetail = true
