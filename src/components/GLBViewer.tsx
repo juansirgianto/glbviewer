@@ -266,24 +266,25 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
     'carpaint_handle_door_fr_doorLayer',
     'carpaint_door_r',
     'carpaint_sideskirts',
+    'black_front',
+    'carpaint_top_frame_interiorLayer',
   ]
 
-
-detailNames.forEach(name => {
-  const part = carModel.getObjectByName(name) as THREE.Mesh
-  if (part) {
-    const mat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(detailsColor),
-      metalness: 1,
-      roughness: 0.5,
-      clearcoat: 1,
-      clearcoatRoughness: 0.03
-    })
-    part.material = mat
-    part.userData.isDetail = true
-    materialsRef.current[name] = mat
-  }
-})
+  detailNames.forEach(name => {
+    const part = carModel.getObjectByName(name) as THREE.Mesh
+    if (part) {
+      const mat = new THREE.MeshPhysicalMaterial({
+        color: new THREE.Color(detailsColor),
+        metalness: 1,
+        roughness: 0.5,
+        clearcoat: 1,
+        clearcoatRoughness: 0.03
+      })
+      part.material = mat
+      part.userData.isDetail = true
+      materialsRef.current[name] = mat
+    }
+  })
 
 const detailRims = [
     'rimDark_000_wheelsLayer',
