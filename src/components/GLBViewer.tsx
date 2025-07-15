@@ -370,15 +370,14 @@ const detailRims = [
     if (!scene) return
 
     const mesh = scene.getObjectByName(partName) as THREE.Mesh
-    if (mesh) {
-      new THREE.TextureLoader().load(texturePath, (texture) => {
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping // ⬅ penting
-  const mat = createTriplanarMaterial(texture, 5.0)
-  mesh.material = mat
-  materialsRef.current[partName] = mat
-})
+    if (!mesh) return
 
-    }
+    new THREE.TextureLoader().load(texturePath, (texture) => {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+      const mat = createTriplanarMaterial(texture, 5.0)
+      mesh.material = mat
+      materialsRef.current[partName] = mat
+    })
   }
 
   window.addEventListener('apply-texture', handleApplyTexture as EventListener)
@@ -387,6 +386,7 @@ const detailRims = [
     window.removeEventListener('apply-texture', handleApplyTexture as EventListener)
   }
 }, [])
+
 
  useEffect(() => {
   const DEFAULT_RIM_PARTS = [
@@ -400,7 +400,7 @@ const detailRims = [
     if (!mesh) return
 
     if (mode === 'texture') {
-      const texture = new THREE.TextureLoader().load('/glbviewer/texture/metal.jpg')
+      const texture = new THREE.TextureLoader().load('/glbviewer/texture/carbon.jpg')
       // const texture = new THREE.TextureLoader().load('/texture/metal.jpg')
       const mat = createTriplanarMaterial(texture, 5.0)
       mesh.material = mat
