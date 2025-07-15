@@ -106,8 +106,8 @@ export default function GLBViewer({
 
     // Load HDR Environment
     const rgbeLoader = new RGBELoader()
-    rgbeLoader.load(`/glbviewer/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
-    // rgbeLoader.load(`/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
+    // rgbeLoader.load(`/glbviewer/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
+    rgbeLoader.load(`/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping
       scene.environment = texture
     })
@@ -135,6 +135,20 @@ export default function GLBViewer({
     // scene.add(directionalLight)
 
     const controls = new OrbitControls(camera, renderer.domElement)
+    // Update cursor saat mulai drag
+    controls.addEventListener('start', () => {
+      if (mountRef.current) {
+        mountRef.current.style.cursor = 'grabbing'
+      }
+    })
+
+    // Update cursor saat selesai drag
+    controls.addEventListener('end', () => {
+      if (mountRef.current) {
+        mountRef.current.style.cursor = 'grab'
+      }
+    })
+
     controls.target.set(0, 0, 0)
     controls.update()
 
@@ -176,7 +190,7 @@ function onPointerMove(event: MouseEvent) {
     const name = mesh.name || mesh.parent?.name
 
     if (name && highlightableMeshes.has(name)) {
-      renderer.domElement.style.cursor = 'pointer'
+      mountRef.current!.style.cursor = 'pointer'
 
       // Reset warna mesh sebelumnya
       if (hoveredMesh && originalColor) {
@@ -202,7 +216,7 @@ function onPointerMove(event: MouseEvent) {
   }
 
   // Reset cursor & warna
-  renderer.domElement.style.cursor = 'default'
+  mountRef.current!.style.cursor = 'grab'
   if (hoveredMesh && originalColor) {
     const mat = hoveredMesh.material as THREE.Material
     if ('color' in mat && mat.color instanceof THREE.Color) {
@@ -392,7 +406,7 @@ const detailRims = [
 
   return (
   <>
-    <div ref={mountRef} style={{ width: '100vw', height: '100vh' }} />
+    <div ref={mountRef} style={{ width: '100vw', height: '100vh',cursor: 'grab' }} />
     {/* <div style={{
       position: 'absolute',
       bottom: 10,
