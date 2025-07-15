@@ -149,6 +149,10 @@ function applyRimTexture(texturePath: string) {
           Body:
           <input type="color" value={detailsColor} onChange={(e) => setDetailsColor(e.target.value)} />
         </div>
+        <div className="flex items-center gap-2">
+          Glass:
+          <input type="color" value={glassColor} onChange={(e) => setGlassColor(e.target.value)} />
+        </div>
         <div className="space-y-2">
         <div className="flex items-center gap-3">
           <span>Rims:</span>
@@ -212,10 +216,6 @@ function applyRimTexture(texturePath: string) {
         )}
       </div>
 
-        <div className="flex items-center gap-2">
-          Glass:
-          <input type="color" value={glassColor} onChange={(e) => setGlassColor(e.target.value)} />
-        </div>
         <button
           onClick={handleReset}
           className="mt-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer"
