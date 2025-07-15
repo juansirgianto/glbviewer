@@ -103,7 +103,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
         checked={mode === 'texture'}
         onChange={() => {
           setMode('texture')
-          applyTexture?.('carpaint_hood', '/texture/carbon.jpg')
+          applyTexture?.('carpaint_hood', '/glbviewer/texture/carbon.jpg')
         }}
       />
       Tekstur
