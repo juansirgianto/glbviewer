@@ -106,8 +106,8 @@ export default function GLBViewer({
 
     // Load HDR Environment
     const rgbeLoader = new RGBELoader()
-    // rgbeLoader.load(`/glbviewer/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
-    rgbeLoader.load(`/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
+    rgbeLoader.load(`/glbviewer/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
+    // rgbeLoader.load(`/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping
       scene.environment = texture
     })
