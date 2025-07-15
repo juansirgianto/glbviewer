@@ -257,7 +257,6 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
   materialsRef.current = {
   body: bodyMaterial,
   glass: glassMaterial,
-  tires: tiresMaterial,
   ...materialsRef.current // jaga-jaga agar tidak hilang saat rerender
 }
 
