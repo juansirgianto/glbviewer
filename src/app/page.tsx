@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 
 export default function Home() {
   const [bodyColor, setBodyColor] = useState('#ffffff')
-  const [detailsColor, setDetailsColor] = useState('#3333FF')
+  const [detailsColor, setDetailsColor] = useState('#004FA3')
   const [glassColor, setGlassColor] = useState('#ffffff')
   const [detailsRim, setDetailsRim] = useState('#888888') // warna default rim
   const [partColors, setPartColors] = useState<Record<string, string>>({})
