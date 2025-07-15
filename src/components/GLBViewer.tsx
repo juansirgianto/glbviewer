@@ -172,7 +172,7 @@ export default function GLBViewer({
     }
   }
 }
-    renderer.domElement.addEventListener('pointerdown', onPointerDown)
+  renderer.domElement.addEventListener('pointerdown', onPointerDown)
 
 let hoveredMesh: THREE.Mesh | null = null
 let originalColor: THREE.Color | null = null
@@ -236,13 +236,13 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
     const loader = new GLTFLoader()
     loader.setDRACOLoader(dracoLoader)
 
-    loader.load(`/glbviewer/ford.glb`, (gltf: GLTF) => {
-    // loader.load(`/ford.glb`, (gltf: GLTF) => {
+    loader.load(`/glbviewer/ford_v2.glb`, (gltf: GLTF) => {
+    // loader.load(`/ford_v2.glb`, (gltf: GLTF) => {
   const carModel = gltf.scene.children[0] as THREE.Object3D
 
   // Buat dan simpan material
   const bodyMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(bodyColor), metalness: 0.25, roughness: 0, transparent: true, opacity: 0.5 })
-  const glassMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(glassColor), metalness: 0.25, roughness: 0, transmission: 1, transparent: true, opacity: 0.5 })
+  const glassMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(glassColor), metalness: 0.5, roughness: 0.2, transmission: 1, transparent: true, opacity: 0.5 })
   materialsRef.current = {
   body: bodyMaterial,
   glass: glassMaterial,
