@@ -32,7 +32,7 @@ export default function Home() {
 })
 
   const DEFAULT_BODY_COLOR = '#ffffff'
-const DEFAULT_DETAILS_COLOR = '#3333FF'
+const DEFAULT_DETAILS_COLOR = '#004FA3'
 
 const DEFAULT_RIM_PARTS = [
   'rimDark_000_wheelsLayer',
