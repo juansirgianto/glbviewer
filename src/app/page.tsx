@@ -14,8 +14,13 @@ export default function Home() {
   const [detailsRim, setDetailsRim] = useState('#888888') // warna default rim
   const [partColors, setPartColors] = useState<Record<string, string>>({})
   const [selectedPartName, setSelectedPartName] = useState<string | null>(null)
+  const [rimMode, setRimMode] = useState<'color' | 'texture'>('color')
   const [partMode, setPartMode] = useState<Record<string, 'color' | 'texture'>>({
-  carpaint_hood: 'color'
+  carpaint_hood: 'color',
+  rimDark_000_wheelsLayer: 'color',
+  rimDark_001_wheelsLayer: 'color',
+  rimDark_002_wheelsLayer: 'color',
+  rimDark_003_wheelsLayer: 'color',
 })
 
   const DEFAULT_BODY_COLOR = '#ffffff'
@@ -56,6 +61,8 @@ function handleReset() {
   setDetailsColor(DEFAULT_DETAILS_COLOR)
   setDetailsRim('#888888')
   setGlassColor(DEFAULT_GLASS_COLOR)
+  setPartMode({ carpaint_hood: 'color' })
+  setRimMode('color')
 
   // Reset warna semua part
   const resetPartColors: Record<string, string> = {}
@@ -134,6 +141,14 @@ function applyTextureToPart(partName: string, texturePath: string) {
   window.dispatchEvent(event)
 }
 
+function applyRimTexture(texturePath: string) {
+  DEFAULT_RIM_PARTS.forEach((name) => {
+    window.dispatchEvent(new CustomEvent('apply-texture', {
+      detail: { partName: name, texturePath }
+    }))
+  })
+}
+
   return (
     <>
       <div className="absolute top-5 left-5 z-10 bg-[#1D4075] p-4 rounded-md shadow text-sm space-y-2 text-white">
@@ -145,10 +160,69 @@ function applyTextureToPart(partName: string, texturePath: string) {
           Body:
           <input type="color" value={detailsColor} onChange={(e) => setDetailsColor(e.target.value)} />
         </div>
-        <div className="flex items-center gap-2">
-          Rims:
-          <input type="color" value={detailsRim} onChange={(e) => setDetailsRim(e.target.value)} />
+        <div className="space-y-2">
+        <div className="flex items-center gap-3">
+          <span>Rims:</span>
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              checked={rimMode === 'color'}
+              onChange={() => {
+                setRimMode('color')
+                DEFAULT_RIM_PARTS.forEach((name) => {
+                  setPartMode((prev) => ({ ...prev, [name]: 'color' }))
+                })
+              }}
+            />
+            Warna
+          </label>
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              checked={rimMode === 'texture'}
+              onChange={() => {
+                setRimMode('texture')
+                DEFAULT_RIM_PARTS.forEach((name) => {
+                  setPartMode((prev) => ({ ...prev, [name]: 'texture' }))
+                })
+                applyRimTexture('/glbviewer/texture/carbon.jpg') // default texture
+                // applyRimTexture('/texture/carbon.jpg') // default texture
+              }}
+            />
+            Tekstur
+          </label>
         </div>
+
+        {rimMode === 'color' ? (
+          <input
+            type="color"
+            value={detailsRim}
+            onChange={(e) => setDetailsRim(e.target.value)}
+          />
+        ) : (
+          <div className="flex gap-3">
+            {[
+              // { name: 'Carbon', file: '/texture/carbon.jpg' },
+              // { name: 'Metal', file: '/texture/metal.png' },
+              // { name: 'Camo', file: '/texture/camo.png' },
+              { name: 'Carbon', file: '/glbviewer/texture/carbon.jpg' },
+              { name: 'Metal', file: '/glbviewer/texture/metal.png' },
+              { name: 'Camo', file: '/glbviewer/texture/camo.png' },
+            ].map(({ name, file }) => (
+              <div key={file} className="text-center">
+                <img
+                  src={file}
+                  alt={name}
+                  className="w-14 h-14 object-cover border border-white cursor-pointer hover:scale-105 transition"
+                  onClick={() => applyRimTexture(file)}
+                />
+                <p className="text-xs">{name}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
         <div className="flex items-center gap-2">
           Glass:
           <input type="color" value={glassColor} onChange={(e) => setGlassColor(e.target.value)} />
@@ -164,17 +238,17 @@ function applyTextureToPart(partName: string, texturePath: string) {
       <div className="absolute top-5 right-5 z-10 bg-[#1D4075] text-white text-xs p-3 rounded-md max-w-[400px] font-mono">
         {selectedPartName && meshDescriptions[selectedPartName]
         ? meshDescriptions[selectedPartName](
-          partColors[selectedPartName] || '#ffffff',
-          (newColor) => setPartColors((prev) => ({ ...prev, [selectedPartName]: newColor })),
-          partMode[selectedPartName] || 'color',
-          (newMode) => setPartMode((prev) => ({ ...prev, [selectedPartName]: newMode })),
-          (part, texture) => {
-            const event = new CustomEvent('apply-texture', {
-              detail: { partName: part, texturePath: texture }
-            })
-            window.dispatchEvent(event)
-          }
-        )
+        partColors[selectedPartName] || '#ffffff',
+        (newColor) => setPartColors((prev) => ({ ...prev, [selectedPartName]: newColor })),
+        partMode[selectedPartName] || 'color',
+        (newMode) => setPartMode((prev) => ({ ...prev, [selectedPartName]: newMode })),
+        (partName, texturePath) => {
+          window.dispatchEvent(new CustomEvent('apply-texture', {
+            detail: { partName, texturePath }
+          }))
+        }
+      )
+
         : <p>Click car part for details.</p>}
       </div>
 

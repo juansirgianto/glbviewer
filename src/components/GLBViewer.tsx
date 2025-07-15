@@ -348,52 +348,27 @@ const detailRims = [
 }, [])
 
  useEffect(() => {
-  const textureCache: Record<string, THREE.Texture> = {}
-
   Object.entries(partMode).forEach(([name, mode]) => {
     const mesh = sceneRef.current?.getObjectByName(name) as THREE.Mesh
     if (!mesh) return
 
-    const currentMaterial = mesh.material
-
     if (mode === 'texture') {
-      const texturePath = '/glbviewer/texture/carbon.jpg' 
-      // const texturePath = '/texture/carbon.jpg' 
-      let texture = textureCache[texturePath]
-
-      // Hanya load sekali per path
-      if (!texture) {
-        texture = new THREE.TextureLoader().load(texturePath)
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-        textureCache[texturePath] = texture
-      }
-
-      // Jika material sekarang bukan ShaderMaterial, ganti
-      if (!(currentMaterial instanceof THREE.ShaderMaterial)) {
-        const mat = createTriplanarMaterial(texture, 5.0)
-        mesh.material = mat
-        materialsRef.current[name] = mat
-      }
-    }
-
-    if (mode === 'color') {
+      // const texture = new THREE.TextureLoader().load('/texture/metal.jpg') // ubah sesuai tekstur
+      const texture = new THREE.TextureLoader().load('/glbviewer/texture/metal.jpg') // ubah sesuai tekstur
+      const mat = createTriplanarMaterial(texture, 5.0)
+      mesh.material = mat
+      materialsRef.current[name] = mat
+    } else if (mode === 'color') {
       const color = partColors[name] || '#ffffff'
-
-      // Jika material sekarang bukan MeshPhysicalMaterial, ganti
-      if (!(currentMaterial instanceof THREE.MeshPhysicalMaterial)) {
-        const mat = new THREE.MeshPhysicalMaterial({
-          color: new THREE.Color(color),
-          metalness: 1,
-          roughness: 0.5,
-          clearcoat: 1,
-          clearcoatRoughness: 0.03
-        })
-        mesh.material = mat
-        materialsRef.current[name] = mat
-      } else {
-        // Jika sudah MeshPhysicalMaterial, cukup update warnanya saja
-        currentMaterial.color.set(color)
-      }
+      const mat = new THREE.MeshPhysicalMaterial({
+        color: new THREE.Color(color),
+        metalness: 1,
+        roughness: 0.5,
+        clearcoat: 1,
+        clearcoatRoughness: 0.03
+      })
+      mesh.material = mat
+      materialsRef.current[name] = mat
     }
   })
 }, [partMode, partColors])
