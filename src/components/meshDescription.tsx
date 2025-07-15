@@ -88,35 +88,59 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
   <div>
     <h1 className="text-lg font-bold">Hood</h1>
 
-<div className='flex gap-2'>
-    <label className='text-lg items-center flex'>
-      <input
-        type="radio"
-        checked={mode === 'color'}
-        onChange={() => setMode('color')}
-      />
-      Warna
-    </label>
-    <label className='text-lg items-center flex'>
-      <input
-        type="radio"
-        checked={mode === 'texture'}
-        onChange={() => {
-          setMode('texture')
-          applyTexture?.('carpaint_hood', '/glbviewer/texture/carbon.jpg')
-        }}
-      />
-      Tekstur
-    </label>
+    <div className='flex gap-4 mt-2'>
+      <label className='text-lg items-center flex gap-2'>
+        <input
+          type="radio"
+          checked={mode === 'color'}
+          onChange={() => setMode('color')}
+        />
+        Warna
+      </label>
+
+      <label className='text-lg items-center flex gap-2'>
+        <input
+          type="radio"
+          checked={mode === 'texture'}
+          onChange={() => setMode('texture')}
+        />
+        Tekstur
+      </label>
     </div>
 
     {mode === 'color' ? (
       <>
         <p className="text-lg mt-2">Pilih warna:</p>
-        <input type="color" value={color} onChange={(e) => onChange(e.target.value)} />
+        <input
+          type="color"
+          value={color}
+          onChange={(e) => onChange(e.target.value)}
+        />
       </>
     ) : (
-      <p className="italic mt-2">Tekstur aktif: carbon</p>
+      <>
+        <p className="text-lg mt-2 mb-1">Pilih tekstur:</p>
+        <div className="flex gap-3 flex-wrap">
+          {[
+            // { name: 'Carbon', file: '/texture/carbon.jpg' },
+            // { name: 'Metal', file: '/texture/stone.jpg' },
+            // { name: 'Camo', file: '/texture/wood.jpg' },
+            { name: 'Carbon', file: '/glbviewer/texture/carbon.jpg' },
+            { name: 'Metal', file: '/glbviewer/texture/stone.jpg' },
+            { name: 'Camo', file: '/glbviewer/texture/wood.jpg' },
+          ].map(({ name, file }) => (
+            <div key={file} className="text-center">
+              <img
+                src={file}
+                alt={name}
+                className="w-20 h-20 object-cover border border-white cursor-pointer hover:scale-105 transition"
+                onClick={() => applyTexture?.('carpaint_hood', file)}
+              />
+              <p className="text-sm mt-1">{name}</p>
+            </div>
+          ))}
+        </div>
+      </>
     )}
   </div>
 ),

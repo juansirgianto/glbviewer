@@ -54,10 +54,13 @@ const ALL_CUSTOMIZABLE_PARTS = [
 function handleReset() {
   setBodyColor(DEFAULT_BODY_COLOR)
   setDetailsColor(DEFAULT_DETAILS_COLOR)
-  setDetailsRim('#888888') // reset rim juga
+  setDetailsRim('#888888')
   setGlassColor(DEFAULT_GLASS_COLOR)
 
+  // Reset warna semua part
   const resetPartColors: Record<string, string> = {}
+  const resetPartMode: Record<string, 'color' | 'texture'> = {}
+
   ALL_CUSTOMIZABLE_PARTS.forEach((name) => {
     if (DEFAULT_RIM_PARTS.includes(name)) {
       resetPartColors[name] = '#888888'
@@ -66,9 +69,13 @@ function handleReset() {
     } else {
       resetPartColors[name] = DEFAULT_DETAILS_COLOR
     }
+
+    // Semua kembali ke mode warna
+    resetPartMode[name] = 'color'
   })
 
   setPartColors(resetPartColors)
+  setPartMode(resetPartMode)
   setSelectedPartName(null)
 }
 
@@ -157,17 +164,17 @@ function applyTextureToPart(partName: string, texturePath: string) {
       <div className="absolute top-5 right-5 z-10 bg-[#1D4075] text-white text-xs p-3 rounded-md max-w-[400px] font-mono">
         {selectedPartName && meshDescriptions[selectedPartName]
         ? meshDescriptions[selectedPartName](
-  partColors[selectedPartName] || '#ffffff',
-  (newColor) => setPartColors((prev) => ({ ...prev, [selectedPartName]: newColor })),
-  partMode[selectedPartName] || 'color',
-  (newMode) => setPartMode((prev) => ({ ...prev, [selectedPartName]: newMode })),
-  (part, texture) => {
-    const event = new CustomEvent('apply-texture', {
-      detail: { partName: part, texturePath: texture }
-    })
-    window.dispatchEvent(event)
-  }
-)
+          partColors[selectedPartName] || '#ffffff',
+          (newColor) => setPartColors((prev) => ({ ...prev, [selectedPartName]: newColor })),
+          partMode[selectedPartName] || 'color',
+          (newMode) => setPartMode((prev) => ({ ...prev, [selectedPartName]: newMode })),
+          (part, texture) => {
+            const event = new CustomEvent('apply-texture', {
+              detail: { partName: part, texturePath: texture }
+            })
+            window.dispatchEvent(event)
+          }
+        )
         : <p>Click car part for details.</p>}
       </div>
 

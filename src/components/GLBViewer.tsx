@@ -348,31 +348,55 @@ const detailRims = [
 }, [])
 
  useEffect(() => {
+  const textureCache: Record<string, THREE.Texture> = {}
+
   Object.entries(partMode).forEach(([name, mode]) => {
     const mesh = sceneRef.current?.getObjectByName(name) as THREE.Mesh
     if (!mesh) return
 
+    const currentMaterial = mesh.material
+
     if (mode === 'texture') {
-      // const texture = new THREE.TextureLoader().load('/texture/carbon.jpg')
-      const texture = new THREE.TextureLoader().load('/glbviewer/texture/carbon.jpg')
-      const mat = createTriplanarMaterial(texture, 5.0)
-      mesh.material = mat
-      materialsRef.current[name] = mat
-    } else if (mode === 'color') {
+      const texturePath = '/glbviewer/texture/carbon.jpg' 
+      // const texturePath = '/texture/carbon.jpg' 
+      let texture = textureCache[texturePath]
+
+      // Hanya load sekali per path
+      if (!texture) {
+        texture = new THREE.TextureLoader().load(texturePath)
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+        textureCache[texturePath] = texture
+      }
+
+      // Jika material sekarang bukan ShaderMaterial, ganti
+      if (!(currentMaterial instanceof THREE.ShaderMaterial)) {
+        const mat = createTriplanarMaterial(texture, 5.0)
+        mesh.material = mat
+        materialsRef.current[name] = mat
+      }
+    }
+
+    if (mode === 'color') {
       const color = partColors[name] || '#ffffff'
-      const mat = new THREE.MeshPhysicalMaterial({
-        color: new THREE.Color(color),
-        metalness: 1,
-        roughness: 0.5,
-        clearcoat: 1,
-        clearcoatRoughness: 0.03
-      })
-      mesh.material = mat
-      materialsRef.current[name] = mat
+
+      // Jika material sekarang bukan MeshPhysicalMaterial, ganti
+      if (!(currentMaterial instanceof THREE.MeshPhysicalMaterial)) {
+        const mat = new THREE.MeshPhysicalMaterial({
+          color: new THREE.Color(color),
+          metalness: 1,
+          roughness: 0.5,
+          clearcoat: 1,
+          clearcoatRoughness: 0.03
+        })
+        mesh.material = mat
+        materialsRef.current[name] = mat
+      } else {
+        // Jika sudah MeshPhysicalMaterial, cukup update warnanya saja
+        currentMaterial.color.set(color)
+      }
     }
   })
 }, [partMode, partColors])
-
 
   useEffect(() => {
   const bodyMat = materialsRef.current.body
