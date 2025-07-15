@@ -126,8 +126,8 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
             // { name: 'Metal', file: '/texture/stone.jpg' },
             // { name: 'Camo', file: '/texture/wood.jpg' },
             { name: 'Carbon', file: '/glbviewer/texture/carbon.jpg' },
-            { name: 'Metal', file: '/glbviewer/texture/stone.jpg' },
-            { name: 'Camo', file: '/glbviewer/texture/wood.jpg' },
+            { name: 'Metal', file: '/glbviewer/texture/metal.png' },
+            { name: 'Camo', file: '/glbviewer/texture/camo.png' },
           ].map(({ name, file }) => (
             <div key={file} className="text-center">
               <img
