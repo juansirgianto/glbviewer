@@ -367,8 +367,8 @@ const detailRims = [
     if (!mesh) return
 
     if (mode === 'texture') {
-      // const texture = new THREE.TextureLoader().load('/texture/metal.jpg') // ubah sesuai tekstur
-      const texture = new THREE.TextureLoader().load('/glbviewer/texture/metal.jpg') // ubah sesuai tekstur
+      const texture = new THREE.TextureLoader().load('/glbviewer/texture/metal.jpg')
+      // const texture = new THREE.TextureLoader().load('/texture/metal.jpg')
       const mat = createTriplanarMaterial(texture, 5.0)
       mesh.material = mat
       materialsRef.current[name] = mat
@@ -393,10 +393,17 @@ const detailRims = [
     (bodyMat as any).color.set(bodyColor)
   }
 
-  const detailsMat = materialsRef.current.details
-  if (detailsMat && 'color' in detailsMat) {
-    (detailsMat as any).color.set(detailsColor)
+  Object.entries(materialsRef.current).forEach(([name, mat]) => {
+  if (
+    mat &&
+    !['body', 'glass'].includes(name) &&
+    partMode[name] !== 'texture' &&
+    'color' in mat &&
+    mat.color instanceof THREE.Color
+  ) {
+    mat.color.set(detailsColor)
   }
+})
 
   const glassMat = materialsRef.current.glass
   if (glassMat && 'color' in glassMat) {
