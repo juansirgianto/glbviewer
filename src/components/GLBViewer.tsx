@@ -243,9 +243,21 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
   // Buat dan simpan material
   const bodyMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(bodyColor), metalness: 0.25, roughness: 0, transparent: true, opacity: 0.5 })
   const glassMaterial = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(glassColor), metalness: 0.5, roughness: 0.2, transmission: 1, transparent: true, opacity: 0.5 })
+  const tiresMaterial = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color('#222222'),
+    metalness: 0,
+    roughness: 0.9,
+    clearcoat: 0.0,
+    clearcoatRoughness: 0.0,
+    reflectivity: 0.05,
+    sheen: 0.1,
+    side: THREE.FrontSide
+  })
+
   materialsRef.current = {
   body: bodyMaterial,
   glass: glassMaterial,
+  tires: tiresMaterial,
   ...materialsRef.current // jaga-jaga agar tidak hilang saat rerender
 }
 
@@ -312,6 +324,17 @@ const detailRims = [
   // Tambahan
   const Glass = carModel.getObjectByName('glassDark_windshield') as THREE.Mesh
   if (Glass) Glass.material = glassMaterial
+
+  const Tire = carModel.getObjectByName('tire_000_wheelsLayer') as THREE.Mesh
+  if (Tire) Tire.material = tiresMaterial
+  const Tire1 = carModel.getObjectByName('tire_001_wheelsLayer') as THREE.Mesh
+  if (Tire1) Tire1.material = tiresMaterial
+  const Tire2 = carModel.getObjectByName('tire_002_wheelsLayer') as THREE.Mesh
+  if (Tire2) Tire2.material = tiresMaterial
+  const Tire3 = carModel.getObjectByName('tire_003_wheelsLayer') as THREE.Mesh
+  if (Tire3) Tire3.material = tiresMaterial
+  const Tire4 = carModel.getObjectByName('tire_004_wheelsLayer') as THREE.Mesh
+  if (Tire4) Tire4.material = tiresMaterial
 
   const Headlight = carModel.getObjectByName('glass_headlight') as THREE.Mesh
   if (Headlight) Headlight.material = bodyMaterial
