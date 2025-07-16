@@ -113,7 +113,7 @@ export default function GLBViewer({
     })
 
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 350)
-    camera.position.set(5.82, 1.69, -5.55)
+    camera.position.set(4.28, 1.24, -4.08)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
