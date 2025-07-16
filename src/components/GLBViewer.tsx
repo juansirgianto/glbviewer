@@ -135,6 +135,7 @@ export default function GLBViewer({
     // scene.add(directionalLight)
 
     const controls = new OrbitControls(camera, renderer.domElement)
+    controls.maxDistance = 9.0
     // Update cursor saat mulai drag
     controls.addEventListener('start', () => {
       if (mountRef.current) {
