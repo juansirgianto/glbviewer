@@ -251,8 +251,8 @@ function applyRimTexture(texturePath: string) {
       </div>
 
       <div className='logo absolute w-[300px] top-[10px] left-1/2 -translate-x-1/2'>
-        {/* <img src={'/glbviewer/ford-logo.png'} /> */}
-        <img src={'/ford-logo.png'} />
+        <img src={'/glbviewer/ford-logo.png'} />
+        {/* <img src={'/ford-logo.png'} /> */}
       </div>
 
       <GLBViewer
