@@ -244,7 +244,7 @@ function applyRimTexture(texturePath: string) {
         }
       )
 
-        : <p>Click car part for details.</p>}
+        : <h1 className='text-lg'>Click car part for details.</h1>}
       </div>
 
       <div className='absolute w-[300px] top-1 left-1/2 -translate-x-1/2'>
