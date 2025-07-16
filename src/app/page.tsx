@@ -148,16 +148,16 @@ function applyRimTexture(texturePath: string) {
   return (
     <>
       <div className="absolute top-5 left-5 z-10 bg-[#1D4075] p-4 rounded-md shadow text-sm space-y-2 text-white">
-        <div className="flex items-center gap-2">
-          Headlight:
+        <div className="items-center">
+          <h1>Headlight:</h1>
           <input type="color" value={bodyColor} onChange={(e) => setBodyColor(e.target.value)} />
         </div>
-        <div className="flex items-center gap-2">
-          Body:
+        <div className="items-center">
+          <h1>Body:</h1>
           <input type="color" value={detailsColor} onChange={(e) => setDetailsColor(e.target.value)} />
         </div>
-        <div className="flex items-center gap-2">
-          Glass:
+        <div className="items-center">
+          <h1>Glass:</h1>
           <input type="color" value={glassColor} onChange={(e) => setGlassColor(e.target.value)} />
         </div>
         <div className="space-y-2">
