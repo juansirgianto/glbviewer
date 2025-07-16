@@ -95,7 +95,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'color'}
           onChange={() => setMode('color')}
         />
-        Warna
+        Color
       </label>
 
       <label className='text-lg items-center flex gap-2'>
@@ -104,13 +104,13 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'texture'}
           onChange={() => setMode('texture')}
         />
-        Tekstur
+        Texture
       </label>
     </div>
 
     {mode === 'color' ? (
       <>
-        <p className="text-lg mt-2">Pilih warna:</p>
+        <p className="text-lg mt-2">Choose color:</p>
         <input
           type="color"
           value={color}
@@ -119,7 +119,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       </>
     ) : (
       <>
-        <p className="text-lg mt-2 mb-1">Pilih tekstur:</p>
+        <p className="text-lg mt-2 mb-1">Choose texture:</p>
         <div className="flex gap-3 flex-wrap">
           {[
             { name: 'Carbon', file: '/glbviewer/texture/carbon.jpg' },
@@ -172,7 +172,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'color'}
           onChange={() => setMode('color')}
         />
-        Warna
+        Color
       </label>
 
       <label className='text-lg items-center flex gap-2'>
@@ -181,13 +181,13 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'texture'}
           onChange={() => setMode('texture')}
         />
-        Tekstur
+        Texture
       </label>
     </div>
 
     {mode === 'color' ? (
       <>
-        <p className="text-lg mt-2">Pilih warna:</p>
+        <p className="text-lg mt-2">Choose color:</p>
         <input
           type="color"
           value={color}
@@ -196,7 +196,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       </>
     ) : (
       <>
-        <p className="text-lg mt-2 mb-1">Pilih tekstur:</p>
+        <p className="text-lg mt-2 mb-1">Choose texture:</p>
         <div className="flex gap-3 flex-wrap">
           {[
             // { name: 'Carbon', file: '/texture/carbon.jpg' },
@@ -238,7 +238,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'color'}
           onChange={() => setMode('color')}
         />
-        Warna
+        Color
       </label>
 
       <label className='text-lg items-center flex gap-2'>
@@ -247,13 +247,13 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'texture'}
           onChange={() => setMode('texture')}
         />
-        Tekstur
+        Texture
       </label>
     </div>
 
     {mode === 'color' ? (
       <>
-        <p className="text-lg mt-2">Pilih warna:</p>
+        <p className="text-lg mt-2">Choose color:</p>
         <input
           type="color"
           value={color}
@@ -262,7 +262,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       </>
     ) : (
       <>
-        <p className="text-lg mt-2 mb-1">Pilih tekstur:</p>
+        <p className="text-lg mt-2 mb-1">Choose texture:</p>
         <div className="flex gap-3 flex-wrap">
           {[
             // { name: 'Carbon', file: '/texture/carbon.jpg' },
@@ -304,7 +304,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'color'}
           onChange={() => setMode('color')}
         />
-        Warna
+        Color
       </label>
 
       <label className='text-lg items-center flex gap-2'>
@@ -313,13 +313,13 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'texture'}
           onChange={() => setMode('texture')}
         />
-        Tekstur
+        Texture
       </label>
     </div>
 
     {mode === 'color' ? (
       <>
-        <p className="text-lg mt-2">Pilih warna:</p>
+        <p className="text-lg mt-2">Choose color:</p>
         <input
           type="color"
           value={color}
@@ -328,7 +328,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       </>
     ) : (
       <>
-        <p className="text-lg mt-2 mb-1">Pilih tekstur:</p>
+        <p className="text-lg mt-2 mb-1">Choose texture:</p>
         <div className="flex gap-3 flex-wrap">
           {[
             // { name: 'Carbon', file: '/texture/carbon.jpg' },
@@ -370,7 +370,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'color'}
           onChange={() => setMode('color')}
         />
-        Warna
+        Color
       </label>
 
       <label className='text-lg items-center flex gap-2'>
@@ -379,13 +379,13 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
           checked={mode === 'texture'}
           onChange={() => setMode('texture')}
         />
-        Tekstur
+        Texture
       </label>
     </div>
 
     {mode === 'color' ? (
       <>
-        <p className="text-lg mt-2">Pilih warna:</p>
+        <p className="text-lg mt-2">Choose color:</p>
         <input
           type="color"
           value={color}
@@ -394,7 +394,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       </>
     ) : (
       <>
-        <p className="text-lg mt-2 mb-1">Pilih tekstur:</p>
+        <p className="text-lg mt-2 mb-1">Choose texture:</p>
         <div className="flex gap-3 flex-wrap">
           {[
             // { name: 'Carbon', file: '/texture/carbon.jpg' },

@@ -173,7 +173,7 @@ function applyRimTexture(texturePath: string) {
                 })
               }}
             />
-            Warna
+            Color
           </label>
           <label className="flex items-center gap-1">
             <input
@@ -188,7 +188,7 @@ function applyRimTexture(texturePath: string) {
                 // applyRimTexture('/texture/carbon.jpg') // default texture
               }}
             />
-            Tekstur
+            Texture
           </label>
         </div>
 
