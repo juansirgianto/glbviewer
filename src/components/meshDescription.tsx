@@ -87,9 +87,15 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
   carpaint_hood: (color, onChange, mode, setMode, applyTexture) => (
   <div>
     <h1 className="text-lg font-bold">Hood</h1>
+    <div className='border-white border-2 text-white p-3 rounded-lg my-2'>
+      <h1 className='text-lg font-semibold'>Specification</h1>
+      <h1 className='text-lg'><span className='font-semibold'>- Outer Panel:</span> Made from steel, aluminum, or composite materials for durability and impact resistance.</h1>
+      <h1 className='text-lg'><span className='font-semibold'>- Inner Panel:</span>  Reinforced structure that holds components like the speaker, wiring, and impact beams.</h1>
+      <h1 className='text-lg'><span className='font-semibold'>- Side Impact Beam:</span>  Reinforcement bar inside the door to absorb energy during side collisions.</h1>
+      </div>
 
     <div className='flex gap-4 mt-2'>
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'color'}
@@ -98,7 +104,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
         Color
       </label>
 
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'texture'}
@@ -166,7 +172,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       </div>
 
     <div className='flex gap-4 mt-2'>
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'color'}
@@ -175,7 +181,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
         Color
       </label>
 
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'texture'}
@@ -232,7 +238,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       </div>
 
     <div className='flex gap-4 mt-2'>
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'color'}
@@ -241,7 +247,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
         Color
       </label>
 
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'texture'}
@@ -298,7 +304,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       </div>
 
     <div className='flex gap-4 mt-2'>
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'color'}
@@ -307,7 +313,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
         Color
       </label>
 
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'texture'}
@@ -364,7 +370,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
       </div>
 
     <div className='flex gap-4 mt-2'>
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'color'}
@@ -373,7 +379,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
         Color
       </label>
 
-      <label className='text-lg items-center flex gap-2'>
+      <label className='text-lg items-center font-semibold flex gap-2'>
         <input
           type="radio"
           checked={mode === 'texture'}
