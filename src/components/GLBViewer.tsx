@@ -106,8 +106,8 @@ export default function GLBViewer({
 
     // Load HDR Environment
     const rgbeLoader = new RGBELoader()
-    rgbeLoader.load(`/glbviewer/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
-    // rgbeLoader.load(`/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
+    // rgbeLoader.load(`/glbviewer/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
+    rgbeLoader.load(`/hdr/studio.hdr`, (texture: THREE.DataTexture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping
       scene.environment = texture
     })
@@ -231,13 +231,13 @@ function onPointerMove(event: MouseEvent) {
 renderer.domElement.addEventListener('pointermove', onPointerMove)
 
     const dracoLoader = new DRACOLoader()
-    dracoLoader.setDecoderPath('/glbviewer/draco/')
-    // dracoLoader.setDecoderPath('/draco/')
+    // dracoLoader.setDecoderPath('/glbviewer/draco/')
+    dracoLoader.setDecoderPath('/draco/')
     const loader = new GLTFLoader()
     loader.setDRACOLoader(dracoLoader)
 
-    loader.load(`/glbviewer/ford_v2.glb`, (gltf: GLTF) => {
-    // loader.load(`/ford_v2.glb`, (gltf: GLTF) => {
+    // loader.load(`/glbviewer/ford_v2.glb`, (gltf: GLTF) => {
+    loader.load(`/ford_v2.glb`, (gltf: GLTF) => {
   const carModel = gltf.scene.children[0] as THREE.Object3D
 
   // Buat dan simpan material

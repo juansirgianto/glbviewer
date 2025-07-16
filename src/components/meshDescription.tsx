@@ -147,8 +147,12 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
   glassDark_windshield: (color, onChange) => (
     <div>
       <h1 className="text-lg font-bold">Glass: Windshield</h1>
-      <p className='text-lg'>Choose color for this part:</p>
-      <input type="color" value={color} onChange={(e) => onChange(e.target.value)} />
+      <div className='border-white border-2 text-white p-3 rounded-lg my-2'>
+      <h1 className='text-lg font-semibold'>Specification</h1>
+      <h1 className='text-lg'><span className='font-semibold'>- Glass Thickness:</span> 4.5 mm - 6 mm.</h1>
+      <h1 className='text-lg'><span className='font-semibold'>- Features:</span> Rain sensor, Soundproofing.</h1>
+      <h1 className='text-lg'><span className='font-semibold'>- Material:</span>  Laminated safety glass.</h1>
+      </div>
     </div>
   ),
   rimDark_000_wheelsLayer: (color, onChange, mode, setMode, applyTexture) => (
@@ -415,11 +419,15 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
     )}
   </div>
 ),
-  glass_headlight: (color, onChange) => (
+  glass_headlight: () => (
     <div>
       <h1 className="text-lg font-bold">Headlight</h1>
-      <p className='text-lg'>Choose color:</p>
-      <input type="color" value={color} onChange={(e) => onChange(e.target.value)} />
+      <div className='border-white border-2 text-white p-3 rounded-lg my-2'>
+      <h1 className='text-lg font-semibold'>Specification</h1>
+      <h1 className='text-lg'><span className='font-semibold'>- Type:</span> LED (Light-Emitting Diode).</h1>
+      <h1 className='text-lg'><span className='font-semibold'>- Features:</span> Auto On/Off, Adaptive Lightning.</h1>
+      <h1 className='text-lg'><span className='font-semibold'>- Material:</span>  Lens Cover.</h1>
+      </div>
     </div>
   ),
 }

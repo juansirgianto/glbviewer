@@ -33,6 +33,11 @@ export default function Home() {
 
   const DEFAULT_BODY_COLOR = '#ffffff'
 const DEFAULT_DETAILS_COLOR = '#004FA3'
+const DEFAULT_GLASS_COLOR = '#ffffff'
+
+const DEFAULT_GLASS_PARTS = [
+  'glassDark_windshield',
+]
 
 const DEFAULT_RIM_PARTS = [
   'rimDark_000_wheelsLayer',
@@ -68,6 +73,7 @@ function handleReset() {
   setBodyColor(DEFAULT_BODY_COLOR)
   setDetailsColor(DEFAULT_DETAILS_COLOR)
   setDetailsRim('#888888')
+  setGlassColor(DEFAULT_GLASS_COLOR)
   setPartMode({ carpaint_hood: 'color' })
   setRimMode('color')
 
@@ -142,7 +148,7 @@ function applyRimTexture(texturePath: string) {
     <>
       <div className="absolute top-5 left-5 z-10 bg-[#1D4075] p-4 rounded-md shadow text-sm space-y-2 text-white">
         <div className="flex items-center gap-2">
-          Light:
+          Headlight:
           <input type="color" value={bodyColor} onChange={(e) => setBodyColor(e.target.value)} />
         </div>
         <div className="flex items-center gap-2">
