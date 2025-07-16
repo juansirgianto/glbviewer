@@ -1,4 +1,4 @@
-// src/components/GLBViewer.tsx
+// src/components/LoadGLB.tsx
 'use client'
 
 import { useEffect, useRef } from 'react'
@@ -9,8 +9,6 @@ import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 // @ts-ignore
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
-
-
 
 export default function LoadGLB() {
   const mountRef = useRef<HTMLDivElement>(null)
@@ -52,7 +50,7 @@ export default function LoadGLB() {
 
     // 📦 Load GLB model
     // const loader = new GLTFLoader()
-    loader.load('/ferrari.glb', (gltf: GLTF) => {
+    loader.load('/landrover.glb', (gltf: GLTF) => {
     const model = gltf.scene
     scene.add(model)
     })
