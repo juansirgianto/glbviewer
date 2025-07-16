@@ -233,7 +233,7 @@ function applyRimTexture(texturePath: string) {
         </button>
       </div>
 
-      <div className="description absolute top-5 right-5 z-10 bg-[#1D4075] text-white text-xs p-3 rounded-md max-w-[400px] font-mono">
+      <div className="description absolute top-[10px] right-5 z-10 bg-[#1D4075] text-white text-xs p-3 rounded-md max-w-[400px] font-mono">
         {selectedPartName && meshDescriptions[selectedPartName]
         ? meshDescriptions[selectedPartName](
         partColors[selectedPartName] || '#ffffff',
