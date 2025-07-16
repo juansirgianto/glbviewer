@@ -6,6 +6,7 @@ import { JSX, useEffect, useRef, useState } from 'react'
 import GLBViewer from '@/components/GLBViewer'
 import { meshDescriptions } from '@/components/meshDescription'
 import { useRouter } from 'next/router'
+import './globals.css'
 
 export default function Home() {
   const [bodyColor, setBodyColor] = useState('#ffffff')
@@ -230,7 +231,7 @@ function applyRimTexture(texturePath: string) {
         </button>
       </div>
 
-      <div className="absolute top-5 right-5 z-10 bg-[#1D4075] text-white text-xs p-3 rounded-md max-w-[400px] font-mono">
+      <div className="description absolute top-5 right-5 z-10 bg-[#1D4075] text-white text-xs p-3 rounded-md max-w-[400px] font-mono">
         {selectedPartName && meshDescriptions[selectedPartName]
         ? meshDescriptions[selectedPartName](
         partColors[selectedPartName] || '#ffffff',
@@ -247,9 +248,9 @@ function applyRimTexture(texturePath: string) {
         : <h1 className='text-lg'>Click car part for details.</h1>}
       </div>
 
-      <div className='absolute w-[300px] top-1 left-1/2 -translate-x-1/2'>
-        <img src={'/glbviewer/ford-logo.png'} />
-        {/* <img src={'/ford-logo.png'} /> */}
+      <div className='logo absolute w-[300px] top-1 left-1/2 -translate-x-1/2'>
+        {/* <img src={'/glbviewer/ford-logo.png'} /> */}
+        <img src={'/ford-logo.png'} />
       </div>
 
       <GLBViewer

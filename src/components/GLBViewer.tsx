@@ -113,7 +113,17 @@ export default function GLBViewer({
     })
 
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 350)
-    camera.position.set(4.28, 1.24, -4.08)
+
+    // Deteksi mobile: layar ≤ 768px
+    const isMobile = window.innerWidth <= 768
+
+    if (isMobile) {
+      // Kamera lebih jauh saat mobile
+      camera.position.set(8.96, 0.8, 0) // jarak lebih jauh
+    } else {
+      // Default desktop
+      camera.position.set(4.28, 1.24, -4.08)
+    }
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
@@ -135,7 +145,7 @@ export default function GLBViewer({
     // scene.add(directionalLight)
 
     const controls = new OrbitControls(camera, renderer.domElement)
-    controls.maxDistance = 9.0
+    controls.maxDistance = 11
     // Update cursor saat mulai drag
     controls.addEventListener('start', () => {
       if (mountRef.current) {
