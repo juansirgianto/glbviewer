@@ -161,8 +161,9 @@ function applyRimTexture(texturePath: string) {
           <input type="color" value={glassColor} onChange={(e) => setGlassColor(e.target.value)} />
         </div>
         <div className="space-y-2">
-        <div className="flex items-center gap-3">
-          <span>Rims:</span>
+        <div className="items-center">
+          <h1 className='mb-1'>Rims:</h1>
+          <div className='flex gap-2'>
           <label className="flex items-center gap-1">
             <input
               type="radio"
@@ -191,6 +192,7 @@ function applyRimTexture(texturePath: string) {
             />
             Texture
           </label>
+          </div>
         </div>
 
         {rimMode === 'color' ? (
