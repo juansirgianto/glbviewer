@@ -147,7 +147,7 @@ function applyRimTexture(texturePath: string) {
 
   return (
     <>
-      <div className="absolute top-5 left-5 z-10 bg-[#1D4075] p-4 rounded-md shadow text-sm space-y-2 text-white">
+      <div className="absolute top-[10px] left-5 z-10 bg-[#1D4075] p-4 rounded-md shadow text-sm space-y-2 text-white">
         <div className="items-center">
           <h1>Headlight:</h1>
           <input type="color" value={bodyColor} onChange={(e) => setBodyColor(e.target.value)} />
@@ -250,9 +250,9 @@ function applyRimTexture(texturePath: string) {
         : <h1 className='text-lg'>Click car part for details.</h1>}
       </div>
 
-      <div className='logo absolute w-[300px] top-1 left-1/2 -translate-x-1/2'>
-        <img src={'/glbviewer/ford-logo.png'} />
-        {/* <img src={'/ford-logo.png'} /> */}
+      <div className='logo absolute w-[300px] top-[10px] left-1/2 -translate-x-1/2'>
+        {/* <img src={'/glbviewer/ford-logo.png'} /> */}
+        <img src={'/ford-logo.png'} />
       </div>
 
       <GLBViewer
