@@ -48,8 +48,8 @@ body {
   }
   .logo{
     position: absolute;
-    width: 100px;
-    left: 85%;
+    width: 150px;
+    left: 80%;
     top: 10px;
   }
 }
