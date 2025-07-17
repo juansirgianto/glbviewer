@@ -32,6 +32,9 @@ body {
   html{
     font-size: 60%;
   }
+  .description{
+    max-width: 200px;
+  }
 }
 
 /* Mobile: max-width 480px */
@@ -42,6 +45,7 @@ body {
     top: auto;
     left: 10px;
     text-align: center;
+    max-width: none;
   }
   html{
     font-size: 60%;
