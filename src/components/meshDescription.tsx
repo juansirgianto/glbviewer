@@ -163,7 +163,7 @@ export const meshDescriptions: Record<string, (color: string, setColor: (v: stri
   ),
   rimDark_000_wheelsLayer: (color, onChange, mode, setMode, applyTexture) => (
   <div>
-    <h1 className="text-lg font-bold">Hood</h1>
+    <h1 className="text-lg font-bold">Front Left Rim</h1>
     <div className='border-white border-2 text-white p-3 rounded-lg my-2'>
       <h1 className='text-lg font-semibold'>Specification</h1>
       <h1 className='text-lg'><span className='font-semibold'>- Diameter:</span> 16".</h1>
