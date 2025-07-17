@@ -87,6 +87,30 @@ export default function GLBViewer({
   const sceneRef = useRef<THREE.Scene | null>(null)
   const [cameraPos, setCameraPos] = useState({ x: 0, y: 0, z: 0 })
 
+  const [progress, setProgress] = useState(0)
+const [isLoading, setIsLoading] = useState(true)
+
+const loadingManager = new THREE.LoadingManager()
+
+loadingManager.onStart = () => {
+  setProgress(0)
+  setIsLoading(true)
+}
+
+loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+  const percent = (itemsLoaded / itemsTotal) * 100
+  setProgress(Math.round(percent))
+}
+
+loadingManager.onLoad = () => {
+  setProgress(100)
+  setIsLoading(false)
+}
+
+loadingManager.onError = (url) => {
+  console.error(`Error loading: ${url}`)
+}
+
   const highlightableMeshes = new Set([
   'glass_headlight',
   'carpaint_door_FL_doorLayer',
@@ -256,7 +280,7 @@ renderer.domElement.addEventListener('pointermove', onPointerMove)
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/glbviewer/draco/')
     // dracoLoader.setDecoderPath('/draco/')
-    const loader = new GLTFLoader()
+    const loader = new GLTFLoader(loadingManager)
     loader.setDRACOLoader(dracoLoader)
 
     loader.load(`/glbviewer/ford_v2.glb`, (gltf: GLTF) => {
@@ -481,6 +505,14 @@ const detailRims = [
   return (
   <>
     <div ref={mountRef} style={{ width: '100vw', height: '100vh',cursor: 'grab' }} />
+    {isLoading && (
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-[#1D4075] px-5 py-3 text-white rounded-lg font-mono text-sm">
+        Loading... {progress}%
+        <div className="w-48 h-2 mt-2 bg-gray-300 rounded overflow-hidden">
+          <div className="h-full bg-green-400 transition-all" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+    )}
     {/* <div style={{
       position: 'absolute',
       bottom: 10,
