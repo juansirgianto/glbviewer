@@ -122,13 +122,13 @@ useEffect(() => {
   })
 }, [detailsRim])
 
-  function handleSelect(name: string) {
-  if (meshDescriptions[name]) {
-    setSelectedPartName(name)
-  } else {
-    setSelectedPartName(null)
+  function handleSelect(name: string | null) {
+    if (name && meshDescriptions[name]) {
+      setSelectedPartName(name)
+    } else {
+      setSelectedPartName(null) // klik kosong atau mesh tidak dikenali
+    }
   }
-}
 
 function applyTextureToPart(partName: string, texturePath: string) {
   const event = new CustomEvent('apply-texture', {
@@ -148,6 +148,7 @@ function applyRimTexture(texturePath: string) {
   return (
     <>
       <div className="absolute top-[10px] left-5 z-10 bg-[#1D4075] p-4 rounded-md shadow text-sm space-y-2 text-white">
+        <div className='flex gap-3'>
         <div className="items-center">
           <h1>Headlight:</h1>
           <input type="color" value={bodyColor} onChange={(e) => setBodyColor(e.target.value)} />
@@ -155,6 +156,7 @@ function applyRimTexture(texturePath: string) {
         <div className="items-center">
           <h1>Body:</h1>
           <input type="color" value={detailsColor} onChange={(e) => setDetailsColor(e.target.value)} />
+        </div>
         </div>
         <div className="items-center">
           <h1>Glass:</h1>
@@ -261,6 +263,7 @@ function applyRimTexture(texturePath: string) {
       glassColor={glassColor}
       partColors={partColors}
       detailsRim={detailsRim}
+      meshDescriptions={meshDescriptions}
       partMode={partMode}
       onSelectMaterial={handleSelect}
     />

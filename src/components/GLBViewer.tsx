@@ -20,7 +20,17 @@ interface GLBViewerProps {
   partColors: Record<string, string>
   detailsRim: string
   partMode: Record<string, 'color' | 'texture'>
-  onSelectMaterial?: (name: string) => void
+  meshDescriptions: Record<
+    string,
+    (
+      color: string,
+      setColor: (v: string) => void,
+      mode: "color" | "texture",
+      setMode: (v: "color" | "texture") => void,
+      applyTexture?: (part: string, texPath: string) => void
+    ) => JSX.Element
+  >
+  onSelectMaterial?: (name: string | null) => void
 }
 
 function createTriplanarMaterial(texture: THREE.Texture, scale: number = 4.0) {
@@ -167,22 +177,24 @@ export default function GLBViewer({
     const pointer = new THREE.Vector2()
 
     function onPointerDown(event: MouseEvent) {
-  const rect = renderer.domElement.getBoundingClientRect()
-  pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-  pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+      const rect = renderer.domElement.getBoundingClientRect()
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
 
-  raycaster.setFromCamera(pointer, camera)
-  const intersects = raycaster.intersectObjects(scene.children, true)
+      raycaster.setFromCamera(pointer, camera)
+      const intersects = raycaster.intersectObjects(scene.children, true)
 
-  if (intersects.length > 0) {
-    const mesh = intersects[0].object as THREE.Mesh
-    const name = mesh.name || mesh.parent?.name
-
-    if (typeof name === 'string') {
-      onSelectMaterial?.(name)
+      if (intersects.length > 0) {
+        const mesh = intersects[0].object as THREE.Mesh
+        const name = mesh.name || mesh.parent?.name
+        if (typeof name === 'string') {
+          onSelectMaterial?.(name)
+          return
+        }
+      }
+      // klik kosong → tutup panel
+      onSelectMaterial?.(null)
     }
-  }
-}
   renderer.domElement.addEventListener('pointerdown', onPointerDown)
 
 let hoveredMesh: THREE.Mesh | null = null
